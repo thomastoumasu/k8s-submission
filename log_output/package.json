@@ -1,0 +1,12 @@
+{
+  "name": "ex1.1",
+  "version": "1.0.0",
+  "description": "https://courses.mooc.fi/org/uh-cs/courses/devops-with-kubernetes/chapter-2/first-deploy",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {}
+}
