@@ -1,8 +1,15 @@
-const OutputEvery5s = (someString) => {
-  console.log(`${new Date().toISOString()}: ${someString}`);
+import express from 'express';
 
-  setTimeout(OutputEvery5s, 5000, someString);
-};
-
+const PORT = process.env.PORT || 3000;
 const randomString = Math.random().toString(36);
-OutputEvery5s(randomString);
+
+const app = express();
+app.use(express.json());
+
+app.get('/', (_req, res) => {
+  res.send(`${new Date().toISOString()}: ${randomString}`);
+});
+
+app.listen(PORT, () => {
+  console.log(`server started in port ${PORT}`);
+});
