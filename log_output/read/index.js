@@ -3,8 +3,8 @@ import path from 'path';
 import fs from 'fs';
 
 const PORT = process.env.PORT || 3000;
-const directory = path.join('/', 'usr', 'src', 'app', 'files');
-// const directory = '../logs/';
+// const directory = path.join('/', 'usr', 'src', 'app', 'files');
+const directory = '../logs/';
 const filePath = path.join(directory, 'logs.txt');
 
 const app = new Koa();
@@ -18,7 +18,6 @@ const getFile = async () =>
       }
       return res(buffer);
     });
-    // res(false);
   });
 
 app.use(async ctx => {

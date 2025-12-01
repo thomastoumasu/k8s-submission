@@ -27,8 +27,8 @@ const writeLogs = (someString, stream) => {
 const randomString = Math.random().toString(36);
 
 // define path to log file
-const directory = path.join('/', 'usr', 'src', 'app', 'files');
-// const directory = '../logs/';
+// const directory = path.join('/', 'usr', 'src', 'app', 'files');
+const directory = '../logs/';
 const filePath = path.join(directory, 'logs.txt');
 
 // create write stream to the log file

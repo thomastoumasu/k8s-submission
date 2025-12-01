@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apps-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apps
+  template:
+    metadata:
+      labels:
+        app: apps
+    spec:
+      volumes:
+        - name: shared-image
+          persistentVolumeClaim:
+            claimName: image-claim
+      containers:
+        - name: log-output
+          image: thomastoumasu/k8s-log-output:1.11
+          volumeMounts:
+            - name: shared-image
+              mountPath: /usr/src/app/files
+        - name: pingpong
+          image: thomastoumasu/k8s-pingpong:1.11
+          volumeMounts:
+            - name: shared-image
+              mountPath: /usr/src/app/files
+    # spec:
+    #   volumes: # Define volume
+    #     - name: shared-image
+    #       emptyDir: {}
+    #   containers:
+    #     - name: pingpong
+    #       image: thomastoumasu/k8s-pingpong:1.11
+    #       volumeMounts: # Mount volume
+    #         - name: shared-image
+    #           mountPath: /usr/src/app/files
+    #     - name: log-output
+    #       image: thomastoumasu/k8s-log-output:1.11
+    #       volumeMounts: # Mount volume
+    #         - name: shared-image
+    #           mountPath: /usr/src/app/files

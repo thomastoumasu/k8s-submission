@@ -1,4 +1,4 @@
-# ingress service - to access multiple apps (here two: log_output and pingpong) from outside
+# temporary storage
 sh clear.sh  
 
 # # create images
@@ -13,12 +13,12 @@ sh clear.sh
 # create cluster
 k3d cluster create -p 8081:80@loadbalancer --agents 2
 
-# create deployment and service for both apps and common ingress
+# create deployment and service for app and ingress
 kubectl apply -f ./log_output/manifests/deployment.yaml
 kubectl apply -f ./log_output/manifests/service.yaml
 kubectl apply -f ./log_output/manifests/ingress.yaml
 
-# check apps is accessible on host port
+# check app is accessible on host port
 kubectl rollout status deployment log-output-dep
 POD=$(kubectl get pods -o=name | grep log-output)
 kubectl wait --for=condition=Ready $POD
