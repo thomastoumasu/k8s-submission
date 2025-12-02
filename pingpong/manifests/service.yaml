@@ -6,7 +6,7 @@ spec:
   type: ClusterIP
   selector:
     app: pingpong
-  ports: # will let TCP traffic from port 1234 to port 3000
+  ports: # will let TCP traffic from port 1234 to port 3002
     - port: 1234
       protocol: TCP
-      targetPort: 3000
+      targetPort: 3002

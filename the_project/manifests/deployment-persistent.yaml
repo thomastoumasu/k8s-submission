@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: the-project-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: the-project
+  template:
+    metadata:
+      labels:
+        app: the-project
+    spec:
+      volumes:
+        - name: shared-image
+          persistentVolumeClaim:
+            claimName: image-claim
+      containers:
+        - name: image-finder
+          image: thomastoumasu/k8s-image-finder:1.12
+          volumeMounts:
+            - name: shared-image
+              mountPath: /shared
+        - name: frontend
+          image: thomastoumasu/k8s-frontend:1.13
+          volumeMounts:
+            - name: shared-image
+              mountPath: /usr/share/nginx/html/shared

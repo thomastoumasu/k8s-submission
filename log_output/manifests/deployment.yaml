@@ -14,4 +14,4 @@ spec:
     spec:
       containers:
         - name: log-output
-          image: thomastoumasu/k8s-log_output:1.7
+          image: thomastoumasu/k8s-log-output:2.1
