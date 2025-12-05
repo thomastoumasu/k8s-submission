@@ -1,6 +1,6 @@
-k3d cluster delete
+kubectl delete all --all
 
-# kubectl delete all --all
+k3d cluster delete
 
 docker rm -vf $(docker ps -aq) 
 docker rmi -f $(docker images -aq)

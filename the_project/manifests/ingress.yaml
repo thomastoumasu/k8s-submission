@@ -11,13 +11,13 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: the-project-svc
+                name: frontend-svc
                 port:
-                  number: 1234 # check service.yaml
+                  number: 1234 # check ../frontend/manifests/deployment.yaml
           - path: /api/todos
             pathType: Prefix
             backend:
               service:
                 name: backend-svc
                 port:
-                  number: 2345 # check service.yaml
+                  number: 2345 # check ../backend/manifests/deployment.yaml

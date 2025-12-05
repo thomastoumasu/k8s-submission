@@ -1,40 +1,28 @@
-import logger from '../utils/logger.js';
+import { info } from '../utils/logger.js';
+import { Todo } from '../models/Todo.js';
 import express from 'express';
 const router = express.Router();
 
-let todos = [
-  {
-    id: '1',
-    text: 'relax',
-  },
-  {
-    id: '2',
-    text: 'drink coffee',
-  },
-  {
-    id: '3',
-    text: 'drink more coffee',
-  },
-];
-
-router.get('/', (req, res) => {
-  res.json(todos);
+router.get('/', async (req, res) => {
+  const todos = await Todo.find({});
+  res.send(todos);
+  console.log('todos: ', todos);
 });
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   const newTodo = req.body;
-  logger.info(`--server: received post request for: ${JSON.stringify(newTodo)}`);
+  info(`--server: received post request for: ${JSON.stringify(newTodo)}`);
   if (newTodo.text.length > 140) {
-    logger.info('--server: Todo too long. Cannot create Todo.');
+    info('--server: Todo too long. Cannot create Todo.');
     return res.status(400).json({
       error: 'Todo too long',
     });
   } else {
-    const newId = todos.length > 0 ? Math.floor(Math.random() * Number.MAX_SAFE_INTEGER) : 0;
-    newTodo.id = String(newId);
-    logger.info(`--server: so creating following Todo: ${JSON.stringify(newTodo)}`);
-    todos = todos.concat(newTodo);
-    res.json(newTodo);
+    const todo = await Todo.create({
+      text: newTodo.text,
+    });
+    res.send(todo);
+    info(`--server: so created following Todo: ${JSON.stringify(todo)}`);
   }
 });
 
