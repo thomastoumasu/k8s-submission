@@ -12,7 +12,7 @@ mongoose
   })
   .catch(err => {
     error('--backend could not connect to MongoDB. Error:\n', err.message);
-    process.exit; // let it crash on purpose so the pod can be restarted and try connecting again
+    process.exit(); // let it crash on purpose so the pod can be restarted and try connecting again
   });
 
 server.listen(PORT, () => {

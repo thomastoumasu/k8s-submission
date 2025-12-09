@@ -1,11 +1,12 @@
 import express from 'express';
 import todosRouter from './routes/todos.js';
+import middleware from './utils/middleware.js';
 import cors from 'cors';
 
 const server = express();
 server.use(express.json());
-
 server.use(cors());
+server.use(middleware.requestLogger);
 
 server.get('/ping', (_req, res) => {
   res.send('pong');

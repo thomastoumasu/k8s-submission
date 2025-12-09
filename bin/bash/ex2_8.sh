@@ -15,8 +15,8 @@ kubectl apply -f ./the_project/mongo/manifests/config-map.yaml
 kubectl apply -f ./the_project/mongo/manifests/statefulset.yaml
 kubectl apply -f ./the_project/frontend/manifests/deployment.yaml
 kubectl apply -f ./the_project/image-finder/manifests/deployment.yaml
-POD=$(kubectl get pods -o=name | grep mongo)
-kubectl wait --for=condition=Ready $POD
+# POD=$(kubectl get pods -o=name | grep mongo)
+# kubectl wait --for=condition=Ready $POD
 kubectl apply -f ./the_project/backend/manifests/deployment.yaml
 kubectl apply -f ./the_project/manifests/ingress.yaml
 kubectl apply -f manifests/debug-pod.yaml 
