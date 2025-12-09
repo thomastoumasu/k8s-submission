@@ -15,6 +15,8 @@ kubectl apply -f ./the_project/mongo/manifests/config-map.yaml
 kubectl apply -f ./the_project/mongo/manifests/statefulset.yaml
 kubectl apply -f ./the_project/frontend/manifests/deployment.yaml
 kubectl apply -f ./the_project/image-finder/manifests/deployment.yaml
+POD=$(kubectl get pods -o=name | grep mongo)
+kubectl wait --for=condition=Ready $POD
 kubectl apply -f ./the_project/backend/manifests/deployment.yaml
 kubectl apply -f ./the_project/manifests/ingress.yaml
 kubectl apply -f manifests/debug-pod.yaml 
@@ -38,22 +40,22 @@ curl localhost:8081
 # show collections
 # db.todos.find({})
 
-# # reset mongo
-kubectl delete -f ./the_project/mongo/manifests/config-map.yaml # and change the file
-kubectl delete -f ./the_project/mongo/manifests/statefulset.yaml
-kubectl get pvc
-kubectl delete pvc/data-mongo-ss-0  
-kubectl apply -f ./the_project/mongo/manifests/config-map.yaml
-kubectl apply -f ./the_project/mongo/manifests/statefulset.yaml
+# # # reset mongo
+# kubectl delete -f ./the_project/mongo/manifests/config-map.yaml # and change the file
+# kubectl delete -f ./the_project/mongo/manifests/statefulset.yaml
+# kubectl get pvc
+# kubectl delete pvc/data-mongo-ss-0  
+# kubectl apply -f ./the_project/mongo/manifests/config-map.yaml
+# kubectl apply -f ./the_project/mongo/manifests/statefulset.yaml
 
-# # debug network: with service name
-kubectl exec -it alpine-curl -- curl http://backend-svc.project:2345/api/todos 
-kubectl exec -it alpine-curl -- curl http://frontend-svc.project:1234
-# # with service IP
-SVCIP=$(kubectl get service/backend-svc -o jsonpath='{.spec.clusterIP}')
-kubectl exec -it alpine-curl -- curl ${SVCIP}:2345/api/todos
-# # with pod IP
-# POD=$(kubectl get pods -o=name | grep backend)
-# kubectl describe $POD
-# curl this ID, with internal port (5000)
+# # # debug network: with service name
+# kubectl exec -it alpine-curl -- curl http://backend-svc.project:2345/api/todos 
+# kubectl exec -it alpine-curl -- curl http://frontend-svc.project:1234
+# # # with service IP
+# SVCIP=$(kubectl get service/backend-svc -o jsonpath='{.spec.clusterIP}')
+# kubectl exec -it alpine-curl -- curl ${SVCIP}:2345/api/todos
+# # # with pod IP
+# # POD=$(kubectl get pods -o=name | grep backend)
+# # kubectl describe $POD
+# # curl this ID, with internal port (5000)
 
