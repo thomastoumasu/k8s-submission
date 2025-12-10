@@ -15,4 +15,23 @@ spec:
     spec:
       containers:
         - name: pingpong
-          image: thomastoumasu/k8s-pingpong:2.1
+          image: thomastoumasu/k8s-pingpong:2.7
+          env:
+            - name: PORT
+              value: '3002'
+            - name: DATABASE_URL
+              value: 'postgres://postgres:mysecretpassword@postgres-svc:5432/postgres'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pingpong-svc
+  namespace: exercises
+spec:
+  type: ClusterIP
+  selector:
+    app: pingpong
+  ports: # will let TCP traffic from port 1234 to port 3002
+    - port: 1234
+      protocol: TCP
+      targetPort: 3002 #check env in deployment above
