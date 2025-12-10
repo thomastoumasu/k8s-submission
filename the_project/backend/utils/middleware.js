@@ -1,5 +1,5 @@
-const logger = require('./logger');
-const morgan = require('morgan');
+import { info } from './logger.js';
+import morgan from 'morgan';
 
 morgan.token('postedData', req => {
   // log data sent in POST requests. (req, res)
@@ -20,7 +20,7 @@ const unknownEndpoint = (req, res) => {
 };
 
 const errorHandler = (error, request, response, next) => {
-  logger.error(error.message);
+  info(error.message);
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' }); // bad request
   } else if (error.name === 'ValidationError') {
@@ -29,4 +29,4 @@ const errorHandler = (error, request, response, next) => {
   next(error);
 };
 
-module.exports = { requestLogger, unknownEndpoint, errorHandler };
+export default { requestLogger, unknownEndpoint, errorHandler };

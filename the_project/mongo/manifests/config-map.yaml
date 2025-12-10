@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongo-cfgmp
+  namespace: project
+data:
+  # property-like keys; each key maps to a simple value
+  MONGO_INITDB_ROOT_USERNAME: 'root'
+  MONGO_INITDB_ROOT_PASSWORD: 'example'
+  MONGO_INITDB_DATABASE: 'the_database'
+  # file-like keys
+  mongo-init.js: |
+    console.log("local file mongo-init.js was called: start");
+    db.createUser({ user: "the_username", pwd: "the_password", roles: [{ role: "dbOwner", db: "the_database" }] });
+    db.createCollection("todos");
+    db.todos.insert({ text: "relax" });
+    db.todos.insert({ text: "drink coffee" });
+    console.log("local file mongo-init.js was called: end");

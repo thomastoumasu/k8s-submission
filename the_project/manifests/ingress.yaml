@@ -2,6 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: the-project-ingress
+  namespace: project
 spec:
   rules:
     - http:
@@ -10,13 +11,13 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: the-project-svc
+                name: frontend-svc
                 port:
-                  number: 1234 # check service.yaml
+                  number: 1234 # check ../frontend/manifests/deployment.yaml
           - path: /api/todos
             pathType: Prefix
             backend:
               service:
                 name: backend-svc
                 port:
-                  number: 2345 # check service.yaml
+                  number: 2345 # check ../backend/manifests/deployment.yaml
