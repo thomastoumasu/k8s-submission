@@ -7,6 +7,7 @@ console.log('Pingpong app: started');
 const app = express();
 app.use(express.json());
 
+// for healthy check of gke ingress
 app.get('/', (_req, res) => {
   res.status(200).end();
 });
