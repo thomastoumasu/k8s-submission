@@ -11,7 +11,7 @@ spec:
         - path:
             type: PathPrefix
             value: /pingpong
-      filters:
+      filters: # see https://gateway-api.sigs.k8s.io/guides/http-redirect-rewrite/#rewrites
         - type: URLRewrite
           urlRewrite:
             path:
