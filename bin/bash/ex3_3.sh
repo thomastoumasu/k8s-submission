@@ -26,7 +26,7 @@ kubectl apply -f ./the_project/mongo/manifests/config-map.yaml
 kubectl apply -f ./the_project/mongo/manifests/statefulset_gke.yaml
 MONGOPOD=$(kubectl get pods -o=name | grep mongo)
 kubectl wait --for=condition=Ready $MONGOPOD
-# sanity check: mongo-init.js should be called in  kubectl logs $MONGOPOD 
+# sanity check: mongo-init.js should be called in  kubectl logs $MONGOPOD > tempMongo.txt
 kubectl apply -f ./the_project/backend/manifests/deployment_gke_gat.yaml
 kubectl apply -f ./the_project/backend/manifests/route_gke.yaml
 BACKENDPOD=$(kubectl get pods -o=name | grep backend)

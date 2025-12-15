@@ -18,8 +18,7 @@
 # kubectl rollout status deployment dwk-environments
 # curl localhost:8082
 
-# # same as 3.3 with kustomize
-# # the_project with the gateway for gke, to access cluster from outside sh bin/bash/ex3_5.sh
+# # same as 3.3, that is the_project with the gateway for gke, with kustomize  sh bin/bash/ex3_5.sh
 # sh delete_k3scl.sh
 # sh docker_clean.sh
 # kubectl delete all --all -n project
