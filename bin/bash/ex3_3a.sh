@@ -1,6 +1,5 @@
-# # the_project with the gateway for gke, to access cluster from outside sh bin/bash/ex3_3.sh
+# # the_project with ingress for gke, to access cluster from outside sh bin/bash/ex3_3.sh
 # https://courses.mooc.fi/org/uh-cs/courses/devops-with-kubernetes/chapter-4/introduction-to-google-kubernetes-engine
-
 # need first to get IP with the ingress, then write this IP in ENV VITE_BACKEND_URL in frontend Dockerfile, 
 # and build this into the frontend image applied with the_project/frontend/manifests/deployment_gke.yaml
 
@@ -19,32 +18,25 @@ kubectl delete all --all -n project
 sh create_gkecl.sh
 kubens project
 # deploy 
-gcloud container clusters update dwk-cluster --location=europe-north1-b --gateway-api=standard
-kubectl apply -f ./the_project/manifests/gateway.yaml 
-
 kubectl apply -f ./the_project/mongo/manifests/config-map.yaml
 kubectl apply -f ./the_project/mongo/manifests/statefulset_gke.yaml
 MONGOPOD=$(kubectl get pods -o=name | grep mongo)
 kubectl wait --for=condition=Ready $MONGOPOD
-# sanity check: mongo-init.js should be called in  kubectl logs $MONGOPOD 
-kubectl apply -f ./the_project/backend/manifests/deployment_gke_gat.yaml
-kubectl apply -f ./the_project/backend/manifests/route_gke.yaml
+kubectl get events -n project  --sort-by='.lastTimestamp'
+# sanity check: mongo-init.js should be called in  kubectl logs $MONGOPOD > tempMongo.txt
+kubectl apply -f ./the_project/backend/manifests/deployment_gke.yaml
 BACKENDPOD=$(kubectl get pods -o=name | grep backend)
 kubectl wait --for=condition=Ready $BACKENDPOD
-# sanity check: backend should connect to mongo  kubectl logs $BACKENDPOD
+# sanity check: backend should connect to mongo  kubectl logs $BACKENDPOD 
 kubectl apply -f ./the_project/manifests/persistentvolumeclaim_gke.yaml
 kubectl apply -f ./the_project/image-finder/manifests/deployment_gke.yaml
-kubectl apply -f ./the_project/frontend/manifests/deployment_gke_gat.yaml
-FRONTENDPOD=$(kubectl get pods -o=name | grep frontend)
-kubectl wait --for=condition=Ready $FRONTENDPOD
-kubectl apply -f ./the_project/frontend/manifests/route_gke.yaml
+kubectl apply -f ./the_project/frontend/manifests/deployment_gke.yaml
+# at the moment same as ingress.yaml
+kubectl apply -f ./the_project/manifests/ingress_gke.yaml 
 
-kubectl describe gateway my-gateway
-gcloud compute url-maps list
-# check the-project is accessible
-kubectl get gateway my-gateway
-kubectl get httproutes
-# curl ADDRESS of my-gateway
+# check the-project is accessible on host port
+kubectl get ing --watch
+# curl ADDRESS of the-project-ingress
 
 # debug: kubectl describe pod/... check Events:
 # debug: kubectl logs -f pod/...

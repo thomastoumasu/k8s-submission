@@ -4,7 +4,9 @@ WORKDIR /usr/src/app
 COPY --chown=node:node package* ./
 RUN npm ci --omit=dev 
 COPY --chown=node:node . .
-ENV VITE_BACKEND_URL=http://localhost:8081/api/todos
+# ENV VITE_BACKEND_URL=http://localhost:8081/api/todos
+# ENV VITE_BACKEND_URL=http://localhost/api/todos
+ENV VITE_BACKEND_URL=http://34.54.85.237/api/todos
 RUN npm run build
 USER node
 
