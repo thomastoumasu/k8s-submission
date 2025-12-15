@@ -36,3 +36,4 @@ kubectl apply -k .
 kubectl describe gateway my-gateway
 gcloud compute url-maps list
 kubectl get gateway my-gateway
+# curl this adress - but first rebuild frontend with the proper env in Dockerfile
