@@ -60,10 +60,10 @@ jobs:
 
       - name: Deploy
         run: |-
-          kubectl create namespace exercises|| true
+          kubectl create namespace exercises || true
           kubectl config set-context --current --namespace=exercises
-          kustomize edit set namespace exercises
           cd ./static-website
+          kustomize edit set namespace exercises
           kustomize edit set image PROJECT/IMAGE=$IMAGE_TAG
           kustomize build . | echo
           kustomize build . | kubectl apply -f -
