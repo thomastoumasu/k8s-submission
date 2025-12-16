@@ -15,7 +15,7 @@ env:
   FRONTEND_IMAGE: frontend
   IMAGEFINDER_IMAGE: image-finder
   DB_IMAGE: mongo
-  SERVICE: backend
+  SERVICE: backend-dep
   BRANCH: ${{ github.ref_name }}
 
 jobs:
@@ -86,3 +86,4 @@ jobs:
           kubectl get events -n project  --sort-by='.lastTimestamp'
           kubectl rollout status deployment $SERVICE
           kubectl get services -o wide
+          kubectl get gateway my-gateway
