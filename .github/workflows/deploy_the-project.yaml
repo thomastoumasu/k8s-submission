@@ -1,5 +1,6 @@
 name: Release application
 # first create cluster as dwk-cluster, for example with sh create_gkecl_big_gat.sh
+# gateway IP must be known and built into ENV VITE_BACKEND_URL in frontend Dockerfile
 
 on:
   push:
