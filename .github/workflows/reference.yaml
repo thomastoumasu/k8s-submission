@@ -23,6 +23,8 @@ jobs:
         uses: actions/checkout@v4
       - name: Debug secret
         run: |-
+          echo '${{ secrets.GKE_PROJECT }}'
+          echo ${{ secrets.GKE_PROJECT }} 
           echo '${{ secrets.GKE_SA_KEY }}'
           echo ${{ secrets.GKE_SA_KEY }}
       - uses: google-github-actions/auth@v2
