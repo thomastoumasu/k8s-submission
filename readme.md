@@ -31,3 +31,5 @@ https://courses.mooc.fi/org/uh-cs/courses/devops-with-kubernetes/
 - [3.4](https://github.com/thomastoumasu/k8s-submission/tree/3.4)
 - [3.5](https://github.com/thomastoumasu/k8s-submission/tree/3.5)
 - [3.6](https://github.com/thomastoumasu/k8s-submission/tree/3.6) Template for Github action to deploy on GKE on push
+- [3.7](https://github.com/thomastoumasu/k8s-submission/tree/3.7)
+- [3.8](https://github.com/thomastoumasu/k8s-submission/tree/3.8)
