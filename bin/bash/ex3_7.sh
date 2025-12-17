@@ -9,6 +9,13 @@
 # use "www.thomastoumasu.dpdns.org" for main aka namespace project
 # use "www.thomastoumasu.xx.kg" for branch aka namespace branch
 
+# both deployment work and are accessible under different domains
+# can still be improved:
+# 1. Right now two gateways are created with two IPs
+# it should be possible to share one gateway to reduce costs: https://gateway-api.sigs.k8s.io/guides/multiple-ns/
+# 2. Two stateful sets and two pvc are created for mongo, one in each namespace. However the db is still shared. Debug, f.e. change one pvc name to avoid potential confusion.
+# 3. Sometimes bind error on the volume shared between image-finder and frontend. Not sure why it works sometimes actually. Either use a ReadWriteMany, or put both appds in one pod.
+
 # debug
 # kubectl describe gateway my-gateway
 # gcloud compute url-maps list

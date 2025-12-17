@@ -21,7 +21,7 @@ spec:
             - name: BACKEND_PORT
               value: '5000'
             - name: MONGODB_URI
-              value: 'mongodb://the_username:the_password@mongo-svc.project:27017/the_database'
+              value: 'mongodb://the_username:the_password@mongo-svc:27017/the_database'
 ---
 apiVersion: v1
 kind: Service
