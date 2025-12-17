@@ -17,7 +17,7 @@ env:
   DB_IMAGE: mongo
   SERVICE: backend-dep
   BRANCH: ${{ github.ref_name }}
-  BRANCH2: ${GITHUB_REF#refs/heads/}
+  BRANCH2: ${{ GITHUB_REF#refs/heads/ }}
   BRANCH3: ${{ github.head_ref || github.ref_name }}
 
 jobs:
@@ -72,12 +72,9 @@ jobs:
       # - name: Set up Kustomize
       #   uses: imranismail/setup-kustomize@v2.1.0
 
-      - name: Deploy
-        run: |-
-          echo "BRANCH=$BRANCH"
-          echo "BRANCH2=$BRANCH2"
-          echo "BRANCH3=$BRANCH3"
-          case $BRANCH3 in
+      - name: Set namespace
+        run: >-
+          case $BRANCH3 in \
             main)
               echo "NAMESPACE="project"" >> $GITHUB_ENV
               ;;
@@ -86,6 +83,12 @@ jobs:
               ;;
           esac
 
+      - name: Deploy
+        run: |-
+          echo "BRANCH=$BRANCH"
+          echo "BRANCH2=$BRANCH2"
+          echo "BRANCH3=$BRANCH3"
+          echo "NAMESPACE=$NAMESPACE"
           kubectl create namespace $NAMESPACE || true
           kubectl config set-context --current --namespace=$NAMESPACE
           cd ./the_project
