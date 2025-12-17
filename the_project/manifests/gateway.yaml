@@ -11,6 +11,6 @@ spec:
       allowedRoutes:
         kinds:
           - kind: HTTPRoute
-  addresses:
-    - type: NamedAddress
-      value: my-ip
+  # addresses:
+  #   - type: NamedAddress
+  #     value: my-ip # does not get recognized, maybe need a global ip?
