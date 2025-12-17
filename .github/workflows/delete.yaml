@@ -14,6 +14,7 @@ jobs:
           kubectl delete all --all -n $NAMESPACE
           kubectl delete gateway my-gateway -n $NAMESPACE
           kubectl delete $(kubectl get httproutes -o name -n $NAMESPACE)
+          kubectl delete namespace $NAMESPACE
       - name: Delete corresponding images
         run: |
           echo "would be nice, try when spare time"
