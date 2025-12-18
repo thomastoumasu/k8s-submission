@@ -116,3 +116,4 @@ jobs:
           kubectl get gateway shared-gateway -n infra
           # gcloud compute url-maps list
           # kubectl describe gateway shared-gateway -n infra
+          # kubectl describe httproutes frontend-route -n $NAMESPACE
