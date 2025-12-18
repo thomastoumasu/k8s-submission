@@ -6,9 +6,9 @@ metadata:
 spec:
   parentRefs:
     - name: shared-gateway
-  hostnames:
-    - www.thomastoumasu.dpdns.org # for main
+  hostnames: []
     # - www.thomastoumasu.xx.kg # for branch
+    # - www.thomastoumasu.dpdns.org # for main
   rules:
     - matches:
         - path:
