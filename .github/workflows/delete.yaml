@@ -6,6 +6,8 @@ env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
   GKE_CLUSTER: dwk-cluster
   GKE_ZONE: europe-north1-b
+  REPOSITORY_LOCATION: europe-north1
+  REPOSITORY: my-repository
 
 jobs:
   delete-environment:
@@ -38,6 +40,20 @@ jobs:
           kubectl delete $(kubectl get httproutes -o name -n $NAMESPACE) -n $NAMESPACE
           kubectl delete namespace $NAMESPACE
 
-      - name: Delete corresponding images
-        run: |
-          echo "would be nice, try when spare time"
+      - name: Create delete policy file to delete images
+        run: >-
+          echo \
+          '[
+            {
+              "name": "delete-branch-images",
+              "action": { "type": "Delete" },
+              "condition": {
+                "tagState": "tagged",
+                "tagPrefixes": ["'$NAMESPACE'"]
+              }
+            }
+          ]'
+          > delete-policy.json
+
+      - name: Delete images
+        run: gcloud artifacts repositories set-cleanup-policies $REPOSITORY --project=$PROJECT_ID --location=$REPOSITORY_LOCATION --policy='delete-policy.json' --no-dry-run
