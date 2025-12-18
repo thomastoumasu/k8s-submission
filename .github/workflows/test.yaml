@@ -3,6 +3,9 @@ name: test
 on:
   push:
 
+env:
+  NAMESPACE: newtest-sharedgta
+
 jobs:
   create-delete-policy:
     name: Create delete policy
@@ -18,7 +21,7 @@ jobs:
               "action": { "type": "Delete" },
               "condition": {
                 "tagState": "tagged",
-                "tagPrefixes": ["test-sharedgta"]
+                "tagPrefixes": ["$NAMESPACE"]
               }
             }
           ]"
