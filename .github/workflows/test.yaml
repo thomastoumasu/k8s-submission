@@ -47,7 +47,7 @@ jobs:
               }
             }
           ]'
-          > delete.json
+          > delete-policy.json
 
       - name: Delete images
         run: gcloud artifacts repositories set-cleanup-policies $REPOSITORY --project=$PROJECT_ID --location=$REPOSITORY_LOCATION --policy='delete-policy.json' --no-dry-run
