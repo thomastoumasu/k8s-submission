@@ -48,7 +48,7 @@ jobs:
         uses: imranismail/setup-kustomize@v2.1.0
 
       - name: Deploy dumper pod
-        run: kubectl run dumper --image=$DUMPER_IMAGE_TAG
+        run: kubectl run dumper --image=$DUMPER_IMAGE_TAG --env="KEY='${{ secrets.GKE_SA_KEY }}'"
 
       # - name: 'Setup mongodb-tools'
       #   run: |
