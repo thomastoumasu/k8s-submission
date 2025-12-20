@@ -21,7 +21,8 @@ metadata:
   namespace: project
 spec:
   containers:
-    - image: thomastoumasu/k8s-mongo-dumper:latest
+    # - image: thomastoumasu/k8s-mongo-dumper:latest
+      - image: thomastoumasu/k8s-mongo-dumper:3.10b-amd
       # command:
       #   - sleep
       #   - '3600'
