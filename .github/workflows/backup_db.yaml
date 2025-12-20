@@ -38,8 +38,7 @@ jobs:
         run: echo "DUMPER_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$DUMPER_IMAGE:$BRANCH-$GITHUB_SHA" >> $GITHUB_ENV
 
       - name: Build
-        # run: docker build --build-arg VITE_BACKEND_URL="http://${SITE}/api/todos" --platform linux/amd64 --tag $FRONTEND_IMAGE_TAG ./the_project/frontend
-        run: docker build --build-arg KEY='${{ secrets.GKE_SA_KEY }}' --platform linux/amd64 --tag $DUMPER_IMAGE_TAG ./the_project/mongo/dumper
+        run: docker build --platform linux/amd64 --tag $DUMPER_IMAGE_TAG ./the_project/mongo/dumper
 
       - name: Publish
         run: docker push $DUMPER_IMAGE_TAG
@@ -48,7 +47,9 @@ jobs:
         uses: imranismail/setup-kustomize@v2.1.0
 
       - name: Deploy dumper pod
-        run: kubectl run dumper --image=$DUMPER_IMAGE_TAG --env="KEY='${{ secrets.GKE_SA_KEY }}'"
+        run: |
+          echo '${{ secrets.GKE_SA_KEY }}' > ./private-key.json
+          kubectl run dumper -v "./private.key.json:/usr/src/app/private-key.json" --image=$DUMPER_IMAGE_TAG
 
       # - name: 'Setup mongodb-tools'
       #   run: |
