@@ -44,6 +44,10 @@ spec:
           ports:
             - name: web
               containerPort: 27017
+          resources:
+            limits:
+              cpu: '0.25'
+              memory: 512M
           env:
             - name: MONGO_INITDB_ROOT_USERNAME
               valueFrom:
