@@ -44,7 +44,7 @@ metadata:
   name: periodic-dumper
   namespace: project
 spec:
-  schedule: '50 * * * *'
+  schedule: '1 2 * * *' # once a day at 2:01
   jobTemplate:
     spec:
       template:
@@ -61,4 +61,4 @@ spec:
                 - name: BUCKET
                   value: 'thomastoumasu_k8s-bucket'
               imagePullPolicy: IfNotPresent
-          restartPolicy: Always
+          restartPolicy: Never # run it only once

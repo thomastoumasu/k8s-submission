@@ -24,19 +24,16 @@ gcloud container clusters create $CLUSTER_NAME --zone=$LOCATION \
 kubectl cluster-info
 kubectl create namespace project
 
-# update if cluster had been created earlier
-gcloud container clusters update $CLUSTER_NAME --location=$LOCATION --workload-pool=${PROJECT_ID}.svc.id.goog
+# # if cluster had been created earlier, update for gateway and Workload Identity Federation:
+# gcloud container clusters update dwk-cluster --location=europe-north1-b --gateway-api=standard
+# gcloud container clusters update $CLUSTER_NAME --location=$LOCATION --workload-pool=${PROJECT_ID}.svc.id.goog
+# # and manually update the existing node-pool:
+# gcloud container node-pools update default-pool --cluster=$CLUSTER_NAME --location=$LOCATION --workload-metadata=GKE_METADATA
 
-# sanity check: make sure Workload Identity Federation was indeed activated on the nodes used, see https://www.trendmicro.com/cloudoneconformity/knowledge-base/gcp/GKE/enable-metadata-server.html
-# first get the node-pool name
-gcloud container node-pools list --cluster=$CLUSTER_NAME --zone=$LOCATION --format="(NAME)"
-# if it is "default-pool", then do (or else replace the name)
+# sanity check: make sure Workload Identity Federation was indeed activated on the nodes used, output should be mode=GKE_METADATA
+# see https://www.trendmicro.com/cloudoneconformity/knowledge-base/gcp/GKE/enable-metadata-server.html
 gcloud container node-pools describe default-pool --cluster=$CLUSTER_NAME --zone=$LOCATION --format="value(config.workloadMetadataConfig)"
-# if output is mode=GKE_METADATA, then all good. Otherwise need to manually update the existing node-pool:
-gcloud container node-pools update default-pool --cluster=$CLUSTER_NAME --location=$LOCATION --workload-metadata=GKE_METADATA
-
-# now install gateway API
-gcloud container clusters update dwk-cluster --location=europe-north1-b --gateway-api=standard
+# to get the pool name if different from default-pool: gcloud container node-pools list --cluster=$CLUSTER_NAME --zone=$LOCATION --format="(NAME)"
 
 # set kube-config to point at the cluster
 # gcloud container clusters get-credentials $CLUSTER_NAME --zone=$LOCATION
@@ -79,6 +76,9 @@ kubectl apply -f ./the_project/mongo/manifests/dumper.yaml
 
 # # debug
 # kubectl delete -f ./the_project/mongo/manifests/dumper.yaml
+kubectl describe cronjobs/periodic-dumper
+kubectl describe job/periodic-dumper-29440029
+kubectl logs pod/periodic-dumper-29440029-ghq95 # should see the dump: Copying file:///usr/src/app/dump/the_database/todos-2025-12-22T11-09-01.bson to gs://thomastoumasu_k8s-bucket/todos-2025-12-22T11-09-01.bson
 # kubectl describe pod/dumper 
 # kubectl logs -f pod/dumper 
 # kubectl exec -it dumper -- sh 
