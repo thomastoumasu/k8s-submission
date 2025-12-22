@@ -13,6 +13,7 @@
 #       memory: "128Mi" # Above this, the kernel may terminate the container (OOMKilled, Out Of Memory) when it detects memory pressure. 
 #       cpu: "500m" # Around this, the kernel will restrict access to the CPU (CPU throttling).
 # for mongo request, check https://www.mongodb.com/docs/kubernetes/current/tutorial/plan-k8s-op-considerations/
+# see also k8s-material-example app7 and sc7 (Horizontal Pod Scaler)
 
 # result:
 # (base) thomas@thomass-Air k8s-submission % kubectl top pod -l app=backend
