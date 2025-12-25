@@ -10,6 +10,7 @@ resources:
   - ../../image-finder/manifests/deployment_gke.yaml
   - ../../frontend/manifests/deployment_gke_gat.yaml
   - ../../frontend/manifests/route_gke.yaml
+  - ../../frontend/manifests/lb-healthcheckpolicy.yaml
 images:
   - name: PROJECT/DB_IMAGE # set by github actions for deployment on gke
     # newName: mongo # if gke without github actions

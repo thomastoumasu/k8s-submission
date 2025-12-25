@@ -1,5 +1,6 @@
 # 4.2 readiness and liveliness probes
-# added one load balancer Health Check Policy to replace the default health check on / from the load balancer
+# added one load balancer Health Check Policy for the backend to replace the default health check on / from the load balancer
+# added one load balancer Health Check Policy for the frontend to define an interval of 30s instead of the default 15s for the lb health checks.
 # https://docs.cloud.google.com/kubernetes-engine/docs/concepts/observability
 
 CLUSTER_NAME=dwk-cluster
@@ -32,6 +33,7 @@ kubectl get gateway shared-gateway -n infra
 kubens project
 kubectl get HealthCheckPolicy
 kubectl describe HealthCheckPolicy lb-healthcheck-backend
+kubectl describe HealthCheckPolicy lb-healthcheck-frontend
 
 # kubectl get pods should show all pods running
 # now remove the db, the backend should fail its probes and start being not READY
