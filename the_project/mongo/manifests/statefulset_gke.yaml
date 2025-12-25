@@ -40,6 +40,7 @@ spec:
       containers:
         - name: mongo
           # image: mongo
+          # image: europe-north1-docker.pkg.dev/dwk-gke-480809/my-repository/mongo:main-dc2842131f6bae51c722d99d9d55cc105342b276
           image: PROJECT/DB_IMAGE # see kustomization.yaml in the root folder
           ports:
             - name: web
