@@ -66,5 +66,15 @@ kubectl apply -f ./pingpong/manifests/analysis-cpu-usage.yaml
 kubectl apply -f ./pingpong/manifests/canary-rollout.yaml
 kubectl argo rollouts get rollout pingpong-dep --watch 
 
-
+# # fundus queries
+# scalar(sum(rate(container_cpu_usage_seconds_total{container!="", namespace="exercises"}[2m])))
+# the CPU usage is expressed in the number of used CPU cores
+# The {container!~""} filter is needed for removing CPU usage metrics for cgroups hierarchy, since these metrics are already included with non-empty container labels.
+# sum(rate(container_cpu_usage_seconds_total{container!=""}[5m])) by (namespace)
+# scalar(sum(kube_pod_container_status_restarts_total{namespace="default", container="flaky-update"}) - sum(kube_pod_container_status_restarts_total{namespace="default", container="flaky-update"} offset 2m))
+# machine_cpu_cores
+# container_memory_working_set_bytes
+# container_memory_max_usage_bytes
+# avg(rate(node_cpu_seconds_total{mode!="idle"}[5m])) by (instance)
+# avg_over_time(node_memory_MemTotal_bytes[1h])
 
