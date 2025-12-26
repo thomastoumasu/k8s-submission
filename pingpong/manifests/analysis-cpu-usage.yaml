@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: cpu-usage
+spec:
+  metrics:
+    - name: cpu-usage
+      initialDelay: 2m
+      # 0.008 is awaited, so set to 0.02 to pass, 0.001 to voluntarily fail
+      successCondition: result < 0.001
+      provider:
+        prometheus:
+          address: http://kube-prometheus-stack-1766-prometheus.prometheus.svc.cluster.local:9090 # DNS name for my Prometheus, find yours with kubectl describe svc ...
+          query: scalar(sum(rate(container_cpu_usage_seconds_total{container!="", namespace="exercises"}[2m])))

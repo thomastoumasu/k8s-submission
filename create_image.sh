@@ -3,10 +3,10 @@ docker images
 # create images
 cd pingpong
 # docker build -t 3.2 .   
-docker build --platform linux/amd64 -t 4.1 . 
+docker build --platform linux/amd64 -t 4.3 . 
 # sanity check
 # docker run --rm -p 3000:3000 --name 2.10 2.10 && curl localhost:8082 
-docker tag 4.1 thomastoumasu/k8s-pingpong:4.1d-amd && docker push thomastoumasu/k8s-pingpong:4.1d-amd
+docker tag 4.3 thomastoumasu/k8s-pingpong:4.3c-amd && docker push thomastoumasu/k8s-pingpong:4.3c-amd
  && cd ../../../
 
 cd the_project/frontend
