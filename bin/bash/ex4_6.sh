@@ -45,9 +45,9 @@ kubectl logs -f $POD
 kubectl port-forward my-nats-0 8222:8222
 
 # # debug
-# kubectl delete -f ./the_project/broadcaster/manifests/deployment.yaml
-# cd the_project/broadcaster
-# docker build --platform linux/amd64 -t broadcaster . 
-# docker tag broadcaster thomastoumasu/k8s-broadcaster:c && docker push thomastoumasu/k8s-broadcaster:c
-# cd ../../
-# kubectl apply -f ./the_project/broadcaster/manifests/deployment.yaml
+kubectl delete -f ./the_project/broadcaster/manifests/deployment.yaml
+cd the_project/broadcaster
+docker build --platform linux/amd64 -t broadcaster . 
+docker tag broadcaster thomastoumasu/k8s-broadcaster:j && docker push thomastoumasu/k8s-broadcaster:j
+cd ../../
+kubectl apply -f ./the_project/broadcaster/manifests/deployment.yaml

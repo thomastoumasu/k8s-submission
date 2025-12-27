@@ -9,7 +9,10 @@ Content-Type: application/json
   "embeds": [
     {
       "description": "drink more coffee",
-      "color": 65280
+      "color": 65280,
+      "footer": {
+        "text": "by broadcaster named"
+      }
     }
   ]
 }
