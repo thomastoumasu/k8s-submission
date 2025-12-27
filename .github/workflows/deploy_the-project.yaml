@@ -17,6 +17,7 @@ env:
   FRONTEND_IMAGE: frontend
   IMAGEFINDER_IMAGE: image-finder
   DB_IMAGE: mongo
+  BROADCASTER_IMAGE: broadcaster
   SERVICE: backend-dep
   # BRANCH: ${{ github.ref_name }} or ${GITHUB_REF#refs/heads/}, check https://courses.mooc.fi/org/uh-cs/courses/devops-with-kubernetes/chapter-4/deployment-pipeline
   BRANCH: ${{ github.head_ref || github.ref_name }}
@@ -70,6 +71,7 @@ jobs:
           echo "FRONTEND_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$FRONTEND_IMAGE:$BRANCH-$GITHUB_SHA" >> $GITHUB_ENV
           echo "IMAGEFINDER_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$IMAGEFINDER_IMAGE:$BRANCH-$GITHUB_SHA" >> $GITHUB_ENV
           echo "DB_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$DB_IMAGE:$BRANCH-$GITHUB_SHA" >> $GITHUB_ENV
+          echo "BROADCASTER_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$BROADCASTER_IMAGE:$BRANCH-$GITHUB_SHA" >> $GITHUB_ENV
 
       - name: Build
         run: |-
@@ -77,6 +79,7 @@ jobs:
           docker build --build-arg VITE_BACKEND_URL="http://${SITE}/api/todos" --platform linux/amd64 --tag $FRONTEND_IMAGE_TAG ./the_project/frontend
           docker build --platform linux/amd64 --tag $IMAGEFINDER_IMAGE_TAG ./the_project/image-finder
           docker build --platform linux/amd64 --tag $DB_IMAGE_TAG ./the_project/mongo
+          docker build --platform linux/amd64 --tag $BROADCASTER_IMAGE_TAG ./the_project/broadcaster
 
       - name: Publish
         run: |-
@@ -84,6 +87,7 @@ jobs:
           docker push $FRONTEND_IMAGE_TAG
           docker push $IMAGEFINDER_IMAGE_TAG
           docker push $DB_IMAGE_TAG
+          docker push $BROADCASTER_IMAGE_TAG
 
       - name: Set up Kustomize
         uses: imranismail/setup-kustomize@v2.1.0
@@ -107,6 +111,7 @@ jobs:
           kustomize edit set image PROJECT/FRONTEND_IMAGE=$FRONTEND_IMAGE_TAG
           kustomize edit set image PROJECT/IMAGEFINDER_IMAGE=$IMAGEFINDER_IMAGE_TAG
           kustomize edit set image PROJECT/DB_IMAGE=$DB_IMAGE_TAG
+          kustomize edit set image PROJECT/BROADCASTER_IMAGE=$BROADCASTER_IMAGE_TAG
           echo "Manifests about to be deployed: "
           kustomize build . --load-restrictor LoadRestrictionsNone | cat
           kustomize build . --load-restrictor LoadRestrictionsNone | kubectl apply -f -

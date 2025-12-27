@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: broadcaster-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: broadcaster
+  template:
+    metadata:
+      labels:
+        app: broadcaster
+    spec:
+      containers:
+        - name: broadcaster
+          image: PROJECT/BROADCASTER_IMAGE
+          env:
+            - name: NATS_URL
+              value: nats://my-nats:4222
+# ---
+# apiVersion: monitoring.coreos.com/v1
+# kind: ServiceMonitor
+# metadata:
+#   name: monitoring-nats
+#   namespace: prometheus
+#   labels:
+#     release: prometheus-operator-1593782473
+# spec:
+#   selector:
+#     matchLabels:
+#       app: my-nats
+#   endpoints:
+#     - interval: 10s
+#       path: /metrics
+#       port: metrics
+#   namespaceSelector:
+#     matchNames:
+#       - default

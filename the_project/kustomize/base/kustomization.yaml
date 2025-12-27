@@ -11,6 +11,7 @@ resources:
   - ../../frontend/manifests/deployment_gke_gat.yaml
   - ../../frontend/manifests/route_gke.yaml
   - ../../frontend/manifests/lb-healthcheckpolicy.yaml
+  - ../../broadcaster/manifests/deployment.yaml
 images:
   - name: PROJECT/DB_IMAGE # set by github actions for deployment on gke
     # newName: mongo # if gke without github actions
@@ -20,3 +21,4 @@ images:
     # newName: thomastoumasu/k8s-image-finder:3.3-amd
   - name: PROJECT/FRONTEND_IMAGE
     # newName: thomastoumasu/k8s-frontend:3.3b-amd
+  - name: PROJECT/BROADCASTER_IMAGE

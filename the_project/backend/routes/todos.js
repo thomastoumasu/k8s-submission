@@ -2,6 +2,10 @@ import { info } from '../utils/logger.js';
 import { Todo } from '../models/Todo.js';
 import express from 'express';
 const router = express.Router();
+import NATS from "nats";
+const nc = NATS.connect({
+  url: process.env.NATS_URL || "nats://nats:4222",
+});
 
 router.get('/', async (req, res) => {
   const todos = await Todo.find({});
@@ -23,6 +27,7 @@ router.post('/', async (req, res) => {
     });
     res.send(todo);
     info(`--server: so created following Todo: ${JSON.stringify(todo)}`);
+    nc.publish("new_todos", JSON.stringify(newTodo));
   }
 });
 
