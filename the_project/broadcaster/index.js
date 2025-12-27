@@ -20,6 +20,7 @@ const setReadyToBroadcast = () => {
 };
 
 const broadcastTodo = async ({ text }) => {
+  // https://discord.com/developers/docs/resources/message#embed-object
   console.log('Processing...');
   const payload = {
     content: 'A new Todo was created',
