@@ -37,7 +37,7 @@ const broadcastTodo = async ({ text, done }) => {
         description: text,
         color: hostname.charCodeAt(28) * 500,
         footer: {
-          text: `by broadcaster named ${hostname}`,
+          text: `brought to you by ${hostname}`,
         },
       },
     ],
