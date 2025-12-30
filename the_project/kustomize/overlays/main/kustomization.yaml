@@ -21,7 +21,6 @@ patches:
   target:
     kind: HTTPRoute
     name: backend-route
-namespace: project
 images:
 - name: PROJECT/BACKEND_IMAGE
   newName: europe-north1-docker.pkg.dev/dwk-gke-480809/my-repository/backend
