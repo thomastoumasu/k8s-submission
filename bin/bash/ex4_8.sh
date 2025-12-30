@@ -20,6 +20,12 @@ kubectl cluster-info
 gcloud container clusters get-credentials $CLUSTER_NAME --location=$CONTROL_PLANE_LOCATION 
 # or --zone=$LOCATION
 
+kubectl create namespace infra || true
+kubectl create namespace production || true
+kubectl label namespaces production shared-gateway-access=true --overwrite=true
+kubectl create namespace staging || true
+kubectl label namespaces staging shared-gateway-access=true --overwrite=true
+
 # link repo to argo so that argo will sync the cluster with repo changes
 kubectl create namespace argocd
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
@@ -30,15 +36,9 @@ kubectl get svc -n argocd --watch
 kubectl get -n argocd secrets argocd-initial-admin-secret -o yaml | grep -o 'password: .*' | cut -f2- -d: | base64 --decode
 # log into argo in browser at external IP using admin and this password
 # then sync the cluster (use repo https://github.com/thomastoumasu/k8s-submission and path ./the_project/kustomize/overlays/main to sync with the kustomization.yaml of main)
-# need to patch cm, https://argo-cd.readthedocs.io/en/release-2.3/user-guide/kustomize/
-kubectl patch cm argocd-cm -n argocd -p '{"data": {"kustomize.buildOptions": "--load-restrictor LoadRestrictionsNone"}}'
-kubectl patch cm argocd-cm -n argocd -p '{"data": {"kustomize.buildOptions": "--enable-helm"}}'
 
 
-kubectl create namespace infra || true
-kubectl create namespace project || true
-kubectl label namespaces project shared-gateway-access=true --overwrite=true
-# push on main to create cluster description in repo (namespace project) (see .github/workflows/pull-deploy_the-project.yaml)
+# push on main to create cluster description in repo (namespace prod) (see .github/workflows/pull-deploy_the-project.yaml)
 # and get gateway IP in argo, use it to connect the domain (in cloudflare)
 
 # no GKE credentials
@@ -46,4 +46,8 @@ kubectl label namespaces project shared-gateway-access=true --overwrite=true
 
 # # debug
 kubectl get gateway shared-gateway -n infra
+
+# need to patch cm, https://argo-cd.readthedocs.io/en/release-2.3/user-guide/kustomize/
+kubectl patch cm argocd-cm -n argocd -p '{"data": {"kustomize.buildOptions": "--load-restrictor LoadRestrictionsNone"}}'
+kubectl patch cm argocd-cm -n argocd -p '{"data": {"kustomize.buildOptions": "--enable-helm"}}'
 

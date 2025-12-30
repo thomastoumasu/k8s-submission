@@ -41,13 +41,6 @@ jobs:
       - name: 'Use gcloud CLI'
         run: gcloud info
 
-      # - name: 'Get GKE credentials'
-      #   uses: 'google-github-actions/get-gke-credentials@v2'
-      #   with:
-      #     cluster_name: '${{ env.GKE_CLUSTER }}'
-      #     project_id: '${{ env.PROJECT_ID }}'
-      #     location: '${{ env.GKE_ZONE }}'
-
       - name: 'Set up Docker Buildx'
         run: gcloud auth configure-docker "$REGISTRY"
 
@@ -55,13 +48,13 @@ jobs:
         run: >-
           case $BRANCH in \
             main)
-              echo "NAMESPACE="project"" >> $GITHUB_ENV
-              echo "KUSTOM="main"" >> $GITHUB_ENV
+              echo "NAMESPACE="production"" >> $GITHUB_ENV
+              echo "KUSTOM="production"" >> $GITHUB_ENV
               echo "SITE="www.thomastoumasu.dpdns.org"" >> $GITHUB_ENV
               ;;
             *)
-              echo "NAMESPACE=$BRANCH" >> $GITHUB_ENV
-              echo "KUSTOM="branch"" >> $GITHUB_ENV
+              echo "NAMESPACE=staging" >> $GITHUB_ENV
+              echo "KUSTOM="staging"" >> $GITHUB_ENV
               echo "SITE="www.thomastoumasu.xx.kg"" >> $GITHUB_ENV
               ;;
           esac
@@ -93,26 +86,17 @@ jobs:
       - name: Set up Kustomize
         uses: imranismail/setup-kustomize@v2.1.0
 
-      # - name: Deploy shared gateway on "infra" namespace
-      #   run: |-
-      #     kubectl create namespace infra || true
-      #     kubectl config set-context --current --namespace=infra
-      #     kubectl apply -f ./the_project/manifests/gateway_shared.yaml
-
       - name: Use right images
         run: |-
-          echo "The code is on branch: BRANCH=$BRANCH"
-          echo "The application will be deployed on namespace: NAMESPACE=$NAMESPACE"
-          cd ./the_project/kustomize/overlays/${KUSTOM}
-          kustomize edit set namespace $NAMESPACE
           kustomize edit set image PROJECT/BACKEND_IMAGE=$BACKEND_IMAGE_TAG
           kustomize edit set image PROJECT/FRONTEND_IMAGE=$FRONTEND_IMAGE_TAG
           kustomize edit set image PROJECT/IMAGEFINDER_IMAGE=$IMAGEFINDER_IMAGE_TAG
           kustomize edit set image PROJECT/DB_IMAGE=$DB_IMAGE_TAG
           kustomize edit set image PROJECT/BROADCASTER_IMAGE=$BROADCASTER_IMAGE_TAG
+          echo "The application will be deployed on namespace: NAMESPACE=$NAMESPACE"
+          cd ./the_project/kustomize/overlays/${KUSTOM}
           echo "Manifests about to be deployed: "
           kustomize build . | cat
-          # kustomize build . --load-restrictor LoadRestrictionsNone | kubectl apply -f -
 
       - name: commit kustomization.yaml to GitHub
         uses: EndBug/add-and-commit@v9
