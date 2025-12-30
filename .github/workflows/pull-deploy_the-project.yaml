@@ -1,4 +1,5 @@
 name: Build and publish application
+# no need for cluster credentials, deployment will be taken care of by ArgoCD
 # need a service account .json file as GKE_SA_KEY (= put full file in repo environment secret): gcloud iam service-accounts keys create ./private-key.json --iam-account=github-actions@dwk-gke-331210.iam.gserviceaccount.com
 # then: create cluster as dwk-cluster, see ex4_8.sh
 # and: gateway IP must be known and built into ENV VITE_BACKEND_URL in frontend Dockerfile so that frontend can reach backend
