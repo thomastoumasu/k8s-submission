@@ -16,7 +16,6 @@ gcloud container clusters create $CLUSTER_NAME --zone=$LOCATION \
   --cluster-version=1.32 --disk-size=32 --num-nodes=3 --machine-type=e2-small \
   --gateway-api=standard
 kubectl cluster-info
-kubectl create namespace project
 # set kube-config to point at the cluster
 gcloud container clusters get-credentials $CLUSTER_NAME --location=$CONTROL_PLANE_LOCATION 
 # or --zone=$LOCATION
@@ -34,6 +33,10 @@ kubectl get -n argocd secrets argocd-initial-admin-secret -o yaml | grep -o 'pas
 # need to patch cm, https://argo-cd.readthedocs.io/en/release-2.3/user-guide/kustomize/
 kubectl patch cm argocd-cm -n argocd -p '{"data": {"kustomize.buildOptions": "--load-restrictor LoadRestrictionsNone"}}'
 
+
+kubectl create namespace infra || true
+kubectl create namespace project || true
+kubectl label namespaces project shared-gateway-access=true --overwrite=true
 # push on main to create cluster description in repo (namespace project) (see .github/workflows/pull-deploy_the-project.yaml)
 # and get gateway IP in argo, use it to connect the domain (in cloudflare)
 

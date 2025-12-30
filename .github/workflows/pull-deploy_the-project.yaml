@@ -103,7 +103,7 @@ jobs:
         run: |-
           echo "The code is on branch: BRANCH=$BRANCH"
           echo "The application will be deployed on namespace: NAMESPACE=$NAMESPACE"
-          # cd ./the_project/kustomize/overlays/${KUSTOM}
+          cd ./the_project/kustomize/overlays/${KUSTOM}
           kubectl create namespace infra || true
           kubectl create namespace $NAMESPACE || true
           kubectl label namespaces $NAMESPACE shared-gateway-access=true --overwrite=true
@@ -133,5 +133,5 @@ jobs:
       - name: commit kustomization.yaml to GitHub
         uses: EndBug/add-and-commit@v9
         with:
-          add: './the_project/kustomize/base/kustomization.yaml'
+          add: './the_project/kustomize/overlays/${KUSTOM}/kustomization.yaml'
           message: New version released ${{ github.sha }}
