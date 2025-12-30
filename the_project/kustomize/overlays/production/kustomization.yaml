@@ -3,7 +3,7 @@ kind: Kustomization
 
 resources:
   - ../../base
-    # - ../../broadcaster/manifests/deployment.yaml
+  - ./broadcaster-deployment.yaml
 
 patches:
   - patch: |

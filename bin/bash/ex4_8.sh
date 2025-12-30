@@ -40,7 +40,8 @@ kubectl get -n argocd secrets argocd-initial-admin-secret -o yaml | grep -o 'pas
 # or declaratively
 kubectl apply -n argocd -f ./the_project/kustomize/infra/application.yaml
 kubectl apply -n argocd -f ./the_project/kustomize/overlays/production/application.yaml
-kubectl apply -n argocd -f ./the_project/kustomize/overlays/staging/application.yaml
+kubectl apply -n argocd -f ./the_project/kustomize/overlays/production/nats.yaml
+# kubectl apply -n argocd -f ./the_project/kustomize/overlays/staging/application.yaml
 
 # push on main to create cluster description in repo (namespace prod) (see .github/workflows/pull-deploy_the-project.yaml)
 # and get gateway IP in argo, use it to connect the domain (in cloudflare)
