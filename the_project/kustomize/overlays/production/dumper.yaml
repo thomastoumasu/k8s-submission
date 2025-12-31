@@ -44,7 +44,7 @@ metadata:
   name: periodic-dumper
   namespace: project
 spec:
-  schedule: '1 2 * * *' # once a day at 2:01
+  schedule: '10 * * * *' #  1 2 * once a day at 2:01
   jobTemplate:
     spec:
       template:
@@ -57,7 +57,7 @@ spec:
               image: thomastoumasu/k8s-mongo-dumper:3.10-amd
               env:
                 - name: MONGO_URI
-                  value: 'mongodb://the_username:the_password@mongo-svc.project:27017/the_database'
+                  value: 'mongodb://the_username:the_password@mongo-svc.production:27017/the_database'
                 - name: BUCKET
                   value: 'thomastoumasu_k8s-bucket'
               imagePullPolicy: IfNotPresent
