@@ -9,8 +9,8 @@ name: Build and publish application
 
 on:
   push:
-    branches:
-      - main
+    # branches:
+    #   - main
 
 env:
   # contains the branch name on push without tag (so main) or the tag on push with tag
