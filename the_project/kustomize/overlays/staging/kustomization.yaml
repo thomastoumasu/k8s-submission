@@ -25,7 +25,7 @@ namespace: staging
 images:
 - name: PROJECT/BACKEND_IMAGE
   newName: europe-north1-docker.pkg.dev/dwk-gke-480809/my-repository/backend
-  newTag: staging-833f83cd91f2b08530e1779e1bc1becf87da61b6
+  newTag: staging-5555c667d1cec73d1a5116020670594c1562791c
 - name: PROJECT/BROADCASTER_IMAGE
   newName: europe-north1-docker.pkg.dev/dwk-gke-480809/my-repository/broadcaster
   newTag: staging-d6c3b4f207ad607bd532b1fee662ab7feea75b92
