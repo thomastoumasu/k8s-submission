@@ -22,8 +22,12 @@ jobs:
         id: set
         run: |
           case $EVENT in
-            release) echo "NAMESPACE="production" SITE="www.thomastoumasu.dpdns.org"" >> $GITHUB_OUTPUT ;;
-            *) echo "NAMESPACE="staging" SITE="www.thomastoumasu.xx.kg"" >> $GITHUB_OUTPUT ;;
+            release) 
+              echo "NAMESPACE="production"" >> $GITHUB_OUTPUT
+              echo "SITE="www.thomastoumasu.dpdns.org"" >> $GITHUB_OUTPUT ;;
+            *) 
+              echo "NAMESPACE="staging"" >> $GITHUB_OUTPUT
+              echo "SITE="www.thomastoumasu.xx.kg"" >> $GITHUB_OUTPUT ;;
           esac
 
   display-namespace:
