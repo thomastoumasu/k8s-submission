@@ -24,11 +24,11 @@ jobs:
         run: |
           case $EVENT in
             main) 
-              echo "NAMESPACE="production"" >> $GITHUB_OUTPUT
-              echo "SITE="www.thomastoumasu.dpdns.org"" >> $GITHUB_OUTPUT ;;
-            *) 
               echo "NAMESPACE="staging"" >> $GITHUB_OUTPUT
               echo "SITE="www.thomastoumasu.xx.kg"" >> $GITHUB_OUTPUT ;;
+            *) 
+              echo "NAMESPACE="production"" >> $GITHUB_OUTPUT
+              echo "SITE="www.thomastoumasu.dpdns.org"" >> $GITHUB_OUTPUT ;;
           esac
 
   display-namespace:
