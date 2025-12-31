@@ -31,6 +31,7 @@ env:
 
 jobs:
   set-environment:
+    name: Sets environment depending on github event
     runs-on: ubuntu-latest
     outputs:
       namespace: ${{ steps.set.outputs.NAMESPACE }}
@@ -47,6 +48,7 @@ jobs:
               echo "NAMESPACE="staging"" >> $GITHUB_OUTPUT
               echo "SITE="www.thomastoumasu.xx.kg"" >> $GITHUB_OUTPUT ;;
           esac
+          echo "namespace is $NAMESPACE, site is $SITE"
 
   build-release-patch:
     name: Build application images, release them to images repo and patches the names to kustomization.yaml
@@ -55,6 +57,8 @@ jobs:
     env:
       NAMESPACE: ${{ needs.set-environment.outputs.namespace }}
       SITE: ${{ needs.set-environment.outputs.site }}
+    outputs:
+      kustomization: ${{ steps.define-file.outputs.KUSTOMIZATION_FILE }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -75,38 +79,44 @@ jobs:
       - name: 'Form the images names'
         run: |-
           echo "BACKEND_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$BACKEND_IMAGE:$NAMESPACE-$GITHUB_SHA" >> $GITHUB_ENV
-          echo "FRONTEND_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$FRONTEND_IMAGE:$NAMESPACE-$GITHUB_SHA" >> $GITHUB_ENV
-          echo "IMAGEFINDER_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$IMAGEFINDER_IMAGE:$NAMESPACE-$GITHUB_SHA" >> $GITHUB_ENV
-          echo "DB_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$DB_IMAGE:$NAMESPACE-$GITHUB_SHA" >> $GITHUB_ENV
-          echo "BROADCASTER_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$BROADCASTER_IMAGE:$NAMESPACE-$GITHUB_SHA" >> $GITHUB_ENV
+          # echo "FRONTEND_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$FRONTEND_IMAGE:$NAMESPACE-$GITHUB_SHA" >> $GITHUB_ENV
+          # echo "IMAGEFINDER_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$IMAGEFINDER_IMAGE:$NAMESPACE-$GITHUB_SHA" >> $GITHUB_ENV
+          # echo "DB_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$DB_IMAGE:$NAMESPACE-$GITHUB_SHA" >> $GITHUB_ENV
+          # echo "BROADCASTER_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$BROADCASTER_IMAGE:$NAMESPACE-$GITHUB_SHA" >> $GITHUB_ENV
 
       - name: Build
         run: |-
           docker build --build-arg ENVIRONMENT=$NAMESPACE --platform linux/amd64 --tag $BACKEND_IMAGE_TAG ./the_project/backend
-          docker build --build-arg VITE_BACKEND_URL="http://${SITE}/api/todos" --platform linux/amd64 --tag $FRONTEND_IMAGE_TAG ./the_project/frontend
-          docker build --platform linux/amd64 --tag $IMAGEFINDER_IMAGE_TAG ./the_project/image-finder
-          docker build --platform linux/amd64 --tag $DB_IMAGE_TAG ./the_project/mongo
-          docker build --build-arg DISCORD_WEBHOOK=$WEBHOOK --platform linux/amd64 --tag $BROADCASTER_IMAGE_TAG ./the_project/broadcaster
+          # docker build --build-arg VITE_BACKEND_URL="http://${SITE}/api/todos" --platform linux/amd64 --tag $FRONTEND_IMAGE_TAG ./the_project/frontend
+          # docker build --platform linux/amd64 --tag $IMAGEFINDER_IMAGE_TAG ./the_project/image-finder
+          # docker build --platform linux/amd64 --tag $DB_IMAGE_TAG ./the_project/mongo
+          # docker build --build-arg DISCORD_WEBHOOK=$WEBHOOK --platform linux/amd64 --tag $BROADCASTER_IMAGE_TAG ./the_project/broadcaster
 
       - name: Publish
         run: |-
           docker push $BACKEND_IMAGE_TAG
-          docker push $FRONTEND_IMAGE_TAG
-          docker push $IMAGEFINDER_IMAGE_TAG
-          docker push $DB_IMAGE_TAG
-          docker push $BROADCASTER_IMAGE_TAG
+          # docker push $FRONTEND_IMAGE_TAG
+          # docker push $IMAGEFINDER_IMAGE_TAG
+          # docker push $DB_IMAGE_TAG
+          # docker push $BROADCASTER_IMAGE_TAG
 
       - name: Set up Kustomize
         uses: imranismail/setup-kustomize@v2.1.0
 
+      - name: Defines the right kustomization path and file
+        id: define-file
+        run: |-
+          echo "KUSTOMIZATION_PATH="./the_project/kustomize/overlays/${NAMESPACE}"" >> $GITHUB_ENV
+          echo "KUSTOMIZATION_FILE="./the_project/kustomize/overlays/${NAMESPACE}/kustomization.yaml"" >> $GITHUB_OUTPUT
+
       - name: Patch image names into the kustomization.yaml corresponding to the github event
         run: |-
-          cd ./the_project/kustomize/overlays/${NAMESPACE}
+          cd $KUSTOMIZATION_PATH
           kustomize edit set image PROJECT/BACKEND_IMAGE=$BACKEND_IMAGE_TAG
-          kustomize edit set image PROJECT/FRONTEND_IMAGE=$FRONTEND_IMAGE_TAG
-          kustomize edit set image PROJECT/IMAGEFINDER_IMAGE=$IMAGEFINDER_IMAGE_TAG
-          kustomize edit set image PROJECT/DB_IMAGE=$DB_IMAGE_TAG
-          kustomize edit set image PROJECT/BROADCASTER_IMAGE=$BROADCASTER_IMAGE_TAG
+          # kustomize edit set image PROJECT/FRONTEND_IMAGE=$FRONTEND_IMAGE_TAG
+          # kustomize edit set image PROJECT/IMAGEFINDER_IMAGE=$IMAGEFINDER_IMAGE_TAG
+          # kustomize edit set image PROJECT/DB_IMAGE=$DB_IMAGE_TAG
+          # kustomize edit set image PROJECT/BROADCASTER_IMAGE=$BROADCASTER_IMAGE_TAG
           echo "Configuration about to be checked in: "
           kustomize build . | cat
 
@@ -116,9 +126,10 @@ jobs:
     runs-on: ubuntu-latest
     env:
       NAMESPACE: ${{ needs.set-environment.outputs.namespace }}
+      FILE: ${{ needs.build-release-patch.outputs.kustomization }}
     steps:
       - name: Commit
         uses: EndBug/add-and-commit@v9
         with:
-          add: './the_project/kustomize/overlays/${NAMESPACE}/kustomization.yaml'
+          add: $FILE
           message: New version released ${{ github.sha }}
