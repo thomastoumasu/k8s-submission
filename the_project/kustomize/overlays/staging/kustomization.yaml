@@ -25,16 +25,16 @@ namespace: staging
 images:
 - name: PROJECT/BACKEND_IMAGE
   newName: europe-north1-docker.pkg.dev/dwk-gke-480809/my-repository/backend
-  newTag: staging-ade7c957a61c6b4f7f735a8a7c9b6b720396145b
+  newTag: staging-5660ce8bb34f7954df0642c0f7b63ed0980f52d3
 - name: PROJECT/BROADCASTER_IMAGE
   newName: europe-north1-docker.pkg.dev/dwk-gke-480809/my-repository/broadcaster
-  newTag: staging-ade7c957a61c6b4f7f735a8a7c9b6b720396145b
+  newTag: staging-5660ce8bb34f7954df0642c0f7b63ed0980f52d3
 - name: PROJECT/DB_IMAGE
   newName: europe-north1-docker.pkg.dev/dwk-gke-480809/my-repository/mongo
-  newTag: staging-ade7c957a61c6b4f7f735a8a7c9b6b720396145b
+  newTag: staging-5660ce8bb34f7954df0642c0f7b63ed0980f52d3
 - name: PROJECT/FRONTEND_IMAGE
   newName: europe-north1-docker.pkg.dev/dwk-gke-480809/my-repository/frontend
-  newTag: staging-ade7c957a61c6b4f7f735a8a7c9b6b720396145b
+  newTag: staging-5660ce8bb34f7954df0642c0f7b63ed0980f52d3
 - name: PROJECT/IMAGEFINDER_IMAGE
   newName: europe-north1-docker.pkg.dev/dwk-gke-480809/my-repository/image-finder
-  newTag: staging-ade7c957a61c6b4f7f735a8a7c9b6b720396145b
+  newTag: staging-5660ce8bb34f7954df0642c0f7b63ed0980f52d3
