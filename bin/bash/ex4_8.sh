@@ -39,9 +39,9 @@ kubectl get -n argocd secrets argocd-initial-admin-secret -o yaml | grep -o 'pas
 # manually (use repo https://github.com/thomastoumasu/k8s-submission and path ./the_project/kustomize/overlays/main to sync with the kustomization.yaml of main)
 # or declaratively
 kubectl apply -n argocd -f ./the_project/kustomize/infra/application.yaml
-kubectl apply -n argocd -f ./the_project/kustomize/overlays/production/application.yaml
-kubectl apply -n argocd -f ./the_project/kustomize/overlays/production/nats.yaml
-# kubectl apply -n argocd -f ./the_project/kustomize/overlays/staging/application.yaml
+# kubectl apply -n argocd -f ./the_project/kustomize/overlays/production/application.yaml
+# kubectl apply -n argocd -f ./the_project/kustomize/overlays/production/nats.yaml
+kubectl apply -n argocd -f ./the_project/kustomize/overlays/staging/application.yaml
 
 # push on main to create cluster description in repo (namespace prod) (see .github/workflows/pull-deploy_the-project.yaml)
 # and get gateway IP in argo, use it to connect the domain (in cloudflare)
@@ -49,7 +49,10 @@ kubectl apply -n argocd -f ./the_project/kustomize/overlays/production/nats.yaml
 # # debug
 kubectl get gateway shared-gateway -n infra
 
-# need to patch cm, https://argo-cd.readthedocs.io/en/release-2.3/user-guide/kustomize/
-kubectl patch cm argocd-cm -n argocd -p '{"data": {"kustomize.buildOptions": "--load-restrictor LoadRestrictionsNone"}}'
-kubectl patch cm argocd-cm -n argocd -p '{"data": {"kustomize.buildOptions": "--enable-helm"}}'
+
+
+
+# # need to patch cm, https://argo-cd.readthedocs.io/en/release-2.3/user-guide/kustomize/
+# kubectl patch cm argocd-cm -n argocd -p '{"data": {"kustomize.buildOptions": "--load-restrictor LoadRestrictionsNone"}}'
+# kubectl patch cm argocd-cm -n argocd -p '{"data": {"kustomize.buildOptions": "--enable-helm"}}'
 

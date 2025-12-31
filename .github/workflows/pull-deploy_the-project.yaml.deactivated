@@ -52,7 +52,7 @@ jobs:
           esac
 
   build-release-patch:
-    name: Builds application images, releases them to images repo, patches the names to kustomization.yaml and checks it in
+    name: Builds images and checks in patched configuration
     needs: [set-environment]
     runs-on: ubuntu-latest
     env:
@@ -93,7 +93,7 @@ jobs:
           docker build --platform linux/amd64 --tag $DB_IMAGE_TAG ./the_project/mongo
           docker build --build-arg DISCORD_WEBHOOK=$WEBHOOK --platform linux/amd64 --tag $BROADCASTER_IMAGE_TAG ./the_project/broadcaster
 
-      - name: Publish
+      - name: Publish to images repo
         run: |-
           docker push $BACKEND_IMAGE_TAG
           docker push $FRONTEND_IMAGE_TAG

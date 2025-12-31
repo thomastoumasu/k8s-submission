@@ -5,11 +5,12 @@ on:
     branches:
       - main
       # - '**'
-  release:
-    types: [published]
+  # release:
+  #   types: [published]
 
 env:
-  EVENT: ${{ github.event_name }}
+  # contains the branch name on push without tag (here main) or the tag on push with tag
+  EVENT: ${{ github.ref_name }}
 
 jobs:
   set-namespace:
@@ -22,7 +23,7 @@ jobs:
         id: set
         run: |
           case $EVENT in
-            release) 
+            main) 
               echo "NAMESPACE="production"" >> $GITHUB_OUTPUT
               echo "SITE="www.thomastoumasu.dpdns.org"" >> $GITHUB_OUTPUT ;;
             *) 
