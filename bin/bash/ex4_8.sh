@@ -30,7 +30,7 @@ kubectl label namespaces staging shared-gateway-access=true --overwrite=true
 kubectl create namespace argocd
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
-# check external IP of argocd-server
+# check external IP of argocd-server to log in
 kubectl get svc -n argocd --watch
 # get initial password for admin (needs base64 decoding)
 kubectl get -n argocd secrets argocd-initial-admin-secret -o yaml | grep -o 'password: .*' | cut -f2- -d: | base64 --decode
@@ -43,16 +43,10 @@ kubectl apply -n argocd -f ./the_project/kustomize/infra/application.yaml
 # kubectl apply -n argocd -f ./the_project/kustomize/overlays/production/nats.yaml
 kubectl apply -n argocd -f ./the_project/kustomize/overlays/staging/application.yaml
 
-# push on main to create cluster description in repo (namespace prod) (see .github/workflows/pull-deploy_the-project.yaml)
-# and get gateway IP in argo, use it to connect the domain (in cloudflare)
+# push on main will trigger deployment on staging namespace, release on main deployment on production namespace (see .github/workflows/pull-deploy_the-project.yaml)
+# get gateway IP in argo, use it to connect the domain (in cloudflare)
+kubectl get gateway shared-gateway -n infra --watch
 
 # # debug
-kubectl get gateway shared-gateway -n infra
-
-
-
-
-# # need to patch cm, https://argo-cd.readthedocs.io/en/release-2.3/user-guide/kustomize/
-# kubectl patch cm argocd-cm -n argocd -p '{"data": {"kustomize.buildOptions": "--load-restrictor LoadRestrictionsNone"}}'
-# kubectl patch cm argocd-cm -n argocd -p '{"data": {"kustomize.buildOptions": "--enable-helm"}}'
+kubectl describe httproutes frontend-route -n staging
 
