@@ -52,7 +52,7 @@ jobs:
           esac
 
   build-release-patch:
-    name: Build application images, release them to images repo and patches the names to kustomization.yaml
+    name: Builds application images, releases them to images repo, patches the names to kustomization.yaml and checks it in
     needs: [set-environment]
     runs-on: ubuntu-latest
     env:
@@ -124,7 +124,7 @@ jobs:
       - name: Commit patched kustomization.yaml to GitHub
         uses: EndBug/add-and-commit@v9
         with:
-          add: $KUSTOMIZATION_FILE
+          add: ${{ KUSTOMIZATION_FILE }}
           message: New version released ${{ github.sha }}
 
   # check-in:
