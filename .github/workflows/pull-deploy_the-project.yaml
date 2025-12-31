@@ -1,9 +1,9 @@
 name: Build and publish application
-# creates application images, store them in image repo and patches/checks in the kustomization.yaml with the image names.
+# creates application images, store them in image repo, patches the kustomization.yaml with the image names and checks it in.
 # Contrary to push-deploy_the-project.yaml, do not deploy, so no need to open access to cluster to this action (so no cluster credentials given).
 # Deployment will be taken care of by ArgoCD, that watches changes to the kustomization.yaml.
 # check ex4_8.sh to set up ArgoCD.
-# Action needs: a service account .json file as GKE_SA_KEY (= put full file in repo environment secret): gcloud iam service-accounts keys create ./private-key.json --iam-account=github-actions@dwk-gke-331210.iam.gserviceaccount.com
+# Needed: a service account .json file as GKE_SA_KEY (= put full file in repo environment secret): gcloud iam service-accounts keys create ./private-key.json --iam-account=github-actions@dwk-gke-331210.iam.gserviceaccount.com
 # Note: cluster gateway IP must be known and built into ENV VITE_BACKEND_URL in frontend Dockerfile so that frontend can reach backend from browser.
 # here this is done with a domain name so only need to put the gateway IP in the cloudflare DNS record for the domains (see SITE below).
 
@@ -30,26 +30,35 @@ env:
   SERVICE: backend-dep
 
 jobs:
-  set-namespace:
+  set-environment:
     runs-on: ubuntu-latest
     outputs:
       namespace: ${{ steps.set.outputs.NAMESPACE }}
+      site: ${{ steps.set.outputs.SITE }}
     steps:
-      - name: Set namespace depending on repo action
+      - name: Set namespace and domain name depending on github event
         id: set
         run: |
           case $EVENT in
-            release) echo "NAMESPACE="production"" >> $GITHUB_OUTPUT ;;
-            *) echo "NAMESPACE="staging"" >> $GITHUB_OUTPUT ;;
+            release) 
+              echo "NAMESPACE="production"" >> $GITHUB_OUTPUT
+              echo "SITE="www.thomastoumasu.dpdns.org"" >> $GITHUB_OUTPUT ;;
+            *) 
+              echo "NAMESPACE="staging"" >> $GITHUB_OUTPUT
+              echo "SITE="www.thomastoumasu.xx.kg"" >> $GITHUB_OUTPUT ;;
           esac
 
-  build-publish:
-    name: Build application images and release them to images repo
+  build-release-patch:
+    name: Build application images, release them to images repo and patches the names to kustomization.yaml
+    needs: [set-environment]
     runs-on: ubuntu-latest
-
+    env:
+      NAMESPACE: ${{ needs.set-environment.outputs.namespace }}
+      SITE: ${{ needs.set-environment.outputs.site }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - uses: google-github-actions/auth@v2
         with:
           credentials_json: '${{ secrets.GKE_SA_KEY }}'
@@ -62,21 +71,6 @@ jobs:
 
       - name: 'Set up Docker Buildx'
         run: gcloud auth configure-docker "$REGISTRY"
-
-      - name: Define namespace for application deployment and backend url
-        run: >-
-          case $BRANCH in \
-            main)
-              echo "NAMESPACE="production"" >> $GITHUB_ENV
-              echo "KUSTOM="production"" >> $GITHUB_ENV
-              echo "SITE="www.thomastoumasu.dpdns.org"" >> $GITHUB_ENV
-              ;;
-            *)
-              echo "NAMESPACE=staging" >> $GITHUB_ENV
-              echo "KUSTOM="staging"" >> $GITHUB_ENV
-              echo "SITE="www.thomastoumasu.xx.kg"" >> $GITHUB_ENV
-              ;;
-          esac
 
       - name: 'Form the images names'
         run: |-
@@ -105,19 +99,26 @@ jobs:
       - name: Set up Kustomize
         uses: imranismail/setup-kustomize@v2.1.0
 
-      - name: Use right images
+      - name: Patch image names into the kustomization.yaml corresponding to the github event
         run: |-
-          cd ./the_project/kustomize/overlays/${KUSTOM}
+          cd ./the_project/kustomize/overlays/${NAMESPACE}
           kustomize edit set image PROJECT/BACKEND_IMAGE=$BACKEND_IMAGE_TAG
           kustomize edit set image PROJECT/FRONTEND_IMAGE=$FRONTEND_IMAGE_TAG
           kustomize edit set image PROJECT/IMAGEFINDER_IMAGE=$IMAGEFINDER_IMAGE_TAG
           kustomize edit set image PROJECT/DB_IMAGE=$DB_IMAGE_TAG
           kustomize edit set image PROJECT/BROADCASTER_IMAGE=$BROADCASTER_IMAGE_TAG
-          echo "Manifests about to be deployed: "
+          echo "Configuration about to be checked in: "
           kustomize build . | cat
 
-      - name: commit kustomization.yaml to GitHub
+  check-in:
+    name: Commit patched kustomization.yaml to GitHub
+    needs: [set-environment, build-release-patch]
+    runs-on: ubuntu-latest
+    env:
+      NAMESPACE: ${{ needs.set-environment.outputs.namespace }}
+    steps:
+      - name: Commit
         uses: EndBug/add-and-commit@v9
         with:
-          add: './the_project/kustomize/overlays/production/kustomization.yaml'
+          add: './the_project/kustomize/overlays/${NAMESPACE}/kustomization.yaml'
           message: New version released ${{ github.sha }}
