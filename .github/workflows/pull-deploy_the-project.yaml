@@ -11,11 +11,10 @@ on:
   push:
     branches:
       - main
-  release:
-    types: [published]
 
 env:
-  EVENT: ${{ github.event_name }}
+  # contains the branch name on push without tag (so main) or the tag on push with tag
+  EVENT: ${{ github.ref_name }}
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
   GKE_CLUSTER: dwk-cluster
   GKE_ZONE: europe-north1-b
@@ -40,14 +39,15 @@ jobs:
       - name: Set namespace and domain name depending on github event
         id: set
         run: |
+          echo "event is $EVENT - if main, commit has no tag so staging, if something else, then commit is tagged so production"
           case $EVENT in
-            release) 
-              echo "NAMESPACE="production"" >> $GITHUB_OUTPUT
-              echo "SITE="www.thomastoumasu.dpdns.org"" >> $GITHUB_OUTPUT
-              ;;
-            *) 
+            main) 
               echo "NAMESPACE="staging"" >> $GITHUB_OUTPUT
               echo "SITE="www.thomastoumasu.xx.kg"" >> $GITHUB_OUTPUT
+              ;;
+            *) 
+              echo "NAMESPACE="production"" >> $GITHUB_OUTPUT
+              echo "SITE="www.thomastoumasu.dpdns.org"" >> $GITHUB_OUTPUT
               ;;
           esac
 
