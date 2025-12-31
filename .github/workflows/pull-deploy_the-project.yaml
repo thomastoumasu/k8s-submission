@@ -43,12 +43,12 @@ jobs:
           case $EVENT in
             release) 
               echo "NAMESPACE="production"" >> $GITHUB_OUTPUT
-              echo "SITE="www.thomastoumasu.dpdns.org"" >> $GITHUB_OUTPUT ;;
-              echo "namespace is $NAMESPACE, site is $SITE"
+              echo "SITE="www.thomastoumasu.dpdns.org"" >> $GITHUB_OUTPUT
+              echo "namespace is $NAMESPACE, site is $SITE" ;;
             *) 
               echo "NAMESPACE="staging"" >> $GITHUB_OUTPUT
-              echo "SITE="www.thomastoumasu.xx.kg"" >> $GITHUB_OUTPUT ;;
-              echo "namespace is $NAMESPACE, site is $SITE"
+              echo "SITE="www.thomastoumasu.xx.kg"" >> $GITHUB_OUTPUT
+              echo "namespace is $NAMESPACE, site is $SITE" ;;
           esac
 
   build-release-patch:
