@@ -1,10 +1,13 @@
 import { info } from '../utils/logger.js';
+import { ENVIRONMENT } from '../utils/config.js';
 import { Todo } from '../models/Todo.js';
 import express from 'express';
 const router = express.Router();
 import NATS from 'nats';
-if (process.env.ENVIRONMENT === 'production') {
-  const nc = NATS.connect({
+
+let nc;
+if (ENVIRONMENT === 'production') {
+  nc = NATS.connect({
     url: process.env.NATS_URL || 'nats://nats:4222',
   });
 }
@@ -29,7 +32,7 @@ router.post('/', async (req, res) => {
     });
     res.send(todo);
     info(`--server: so created following Todo: ${JSON.stringify(todo)}`);
-    if (process.env.ENVIRONMENT === 'production') {
+    if (ENVIRONMENT === 'production') {
       nc.publish('todos', JSON.stringify(newTodo));
     }
   }
@@ -46,7 +49,7 @@ router.put('/:id', async (req, res) => {
   todoToUpdate.done = req.body.done;
   const updatedTodo = await todoToUpdate.save(); // findByIdAndUpdate should be better than findById and save
   res.json(updatedTodo);
-  if (process.env.ENVIRONMENT === 'production') {
+  if (ENVIRONMENT === 'production') {
     nc.publish('todos', JSON.stringify(updatedTodo));
   }
 });

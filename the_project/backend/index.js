@@ -1,5 +1,5 @@
 import { info, error } from './utils/logger.js';
-import { PORT, MONGODB_URI } from './utils/config.js';
+import { PORT, MONGODB_URI, ENVIRONMENT } from './utils/config.js';
 import server from './server.js';
 import mongoose from 'mongoose';
 
@@ -17,4 +17,5 @@ mongoose
 
 server.listen(PORT, () => {
   info(`backend server started in port ${PORT}`);
+  info(`environment is: ${ENVIRONMENT}`);
 });

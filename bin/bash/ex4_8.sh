@@ -39,9 +39,9 @@ kubectl get -n argocd secrets argocd-initial-admin-secret -o yaml | grep -o 'pas
 # manually (use repo https://github.com/thomastoumasu/k8s-submission and path ./the_project/kustomize/overlays/main to sync with the kustomization.yaml of main)
 # or declaratively
 kubectl apply -n argocd -f ./the_project/kustomize/infra/application.yaml
-# kubectl apply -n argocd -f ./the_project/kustomize/overlays/production/application.yaml
-# kubectl apply -n argocd -f ./the_project/kustomize/overlays/production/nats.yaml
 kubectl apply -n argocd -f ./the_project/kustomize/overlays/staging/application.yaml
+kubectl apply -n argocd -f ./the_project/kustomize/overlays/production/nats.yaml
+kubectl apply -n argocd -f ./the_project/kustomize/overlays/production/application.yaml
 
 # push on main will trigger deployment on staging namespace, release on main deployment on production namespace (see .github/workflows/pull-deploy_the-project.yaml)
 # get gateway IP in argo, use it to connect the domain (in cloudflare)
