@@ -6,3 +6,15 @@ gcloud logging read 'protoPayload.serviceName="artifactregistry.googleapis.com" 
 
 # check after one day
 gcloud artifacts docker images list europe-north1-docker.pkg.dev/dwk-gke-480809/my-repository/backend --include-tags > after.txt
+
+# delete-policy.json
+[
+  {
+    "name": "delete-branch-images",
+    "action": { "type": "Delete" },
+    "condition": {
+      "tagState": "tagged",
+      "tagPrefixes": ["test-sharedgta"]
+    }
+  }
+]
