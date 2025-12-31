@@ -130,17 +130,3 @@ jobs:
         with:
           add: './the_project/kustomize/overlays/'
           message: New version released ${{ github.sha }}
-
-  # check-in:
-  #   name: Commit patched kustomization.yaml to GitHub
-  #   needs: [set-environment, build-release-patch]
-  #   runs-on: ubuntu-latest
-  #   env:
-  #     NAMESPACE: ${{ needs.set-environment.outputs.namespace }}
-  #     FILE: ${{ needs.build-release-patch.outputs.kustomization }}
-  #   steps:
-  #     - name: Commit
-  #       uses: EndBug/add-and-commit@v9
-  #       with:
-  #         add: $FILE
-  #         message: New version released ${{ github.sha }}
