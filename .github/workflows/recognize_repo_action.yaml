@@ -16,13 +16,14 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       namespace: ${{ steps.set.outputs.NAMESPACE }}
+      site: ${{ steps.set.outputs.SITE }}
     steps:
       - name: Set namespace depending on repo action
         id: set
         run: |
           case $EVENT in
-            release) echo "NAMESPACE="production"" >> $GITHUB_OUTPUT ;;
-            *) echo "NAMESPACE="staging"" >> $GITHUB_OUTPUT ;;
+            release) echo "NAMESPACE="production" SITE="www.thomastoumasu.dpdns.org"" >> $GITHUB_OUTPUT ;;
+            *) echo "NAMESPACE="staging" SITE="www.thomastoumasu.xx.kg"" >> $GITHUB_OUTPUT ;;
           esac
 
   display-namespace:
@@ -30,7 +31,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       NAMESPACE: ${{ needs.set-namespace.outputs.namespace }}
+      SITE: ${{ needs.set-namespace.outputs.site }}
     steps:
       - name: Display namespace
         run: |
           echo "namespace is $NAMESPACE"
+          echo "site is $SITE"

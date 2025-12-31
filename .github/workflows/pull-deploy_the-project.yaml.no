@@ -9,8 +9,13 @@ name: Build and publish application
 
 on:
   push:
+    branches:
+      - main
+  release:
+    types: [published]
 
 env:
+  EVENT: ${{ github.event_name }}
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
   GKE_CLUSTER: dwk-cluster
   GKE_ZONE: europe-north1-b
@@ -23,12 +28,23 @@ env:
   BROADCASTER_IMAGE: broadcaster
   WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
   SERVICE: backend-dep
-  # BRANCH: ${{ github.ref_name }} or ${GITHUB_REF#refs/heads/}, check https://courses.mooc.fi/org/uh-cs/courses/devops-with-kubernetes/chapter-4/deployment-pipeline
-  BRANCH: ${{ github.head_ref || github.ref_name }}
 
 jobs:
+  set-namespace:
+    runs-on: ubuntu-latest
+    outputs:
+      namespace: ${{ steps.set.outputs.NAMESPACE }}
+    steps:
+      - name: Set namespace depending on repo action
+        id: set
+        run: |
+          case $EVENT in
+            release) echo "NAMESPACE="production"" >> $GITHUB_OUTPUT ;;
+            *) echo "NAMESPACE="staging"" >> $GITHUB_OUTPUT ;;
+          esac
+
   build-publish:
-    name: Build, Push, Release
+    name: Build application images and release them to images repo
     runs-on: ubuntu-latest
 
     steps:
