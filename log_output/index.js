@@ -2,7 +2,7 @@ import Koa from 'koa';
 import axios from 'axios';
 import path from 'path';
 import fs from 'fs';
-import { PINGPONG_URL, PORT, MESSAGE } from './utils/config.js';
+import { PINGPONG_URL, GREETER_URL, PORT, MESSAGE } from './utils/config.js';
 import Router from '@koa/router';
 const router = new Router();
 
@@ -26,6 +26,7 @@ const getFile = async () =>
 
 router.get('/', async ctx => {
   if (ctx.path.includes('favicon.ico')) return;
+  // get ping pong counter from pingpong app
   let counter = 0;
   try {
     const response = await axios.get(PINGPONG_URL);
@@ -34,9 +35,25 @@ router.get('/', async ctx => {
   } catch {
     console.log(`error from ${PINGPONG_URL}. Counter defaulted to zero.`);
   }
+  // get greetings from greeter app
+  let greetings = 'sadly, none';
+  try {
+    const response = await axios.get(GREETER_URL);
+    console.log(`got greetings: ${response.data} from ${GREETER_URL}`);
+    greetings = response.data;
+  } catch {
+    console.log(`error from ${GREETER_URL}. Was not greeted.`);
+  }
+  // get ConfigMap content
   const configContent = await getFile();
 
-  ctx.body = `file content: ${configContent}\nenv variable: MESSAGE=${MESSAGE}\n${new Date().toISOString()}: ${randomString} \nPing / Pongs: ${counter}`;
+  ctx.body =
+    `${new Date().toISOString()}: ${randomString} \n` +
+    `Ping / Pongs: ${counter}\n` +
+    `env variable: MESSAGE=${MESSAGE}\n` +
+    `file contents: ${configContent}` +
+    `greetings: ${greetings}`;
+
   ctx.set('Content-type', 'text/plain');
   ctx.status = 200;
 });

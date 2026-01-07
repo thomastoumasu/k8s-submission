@@ -1,12 +1,12 @@
 # eventually delete previous image
 docker images
 # create images
-cd pingpong
-# docker build -t 3.2 .   
-docker build --platform linux/amd64 -t 4.3 . 
+cd log_output
+docker build -t 5.3 .   
+# docker build --platform linux/amd64 -t 5.3 . 
 # sanity check
 # docker run --rm -p 3000:3000 --name 2.10 2.10 && curl localhost:8082 
-docker tag 4.3 thomastoumasu/k8s-pingpong:4.3c-amd && docker push thomastoumasu/k8s-pingpong:4.3c-amd
+docker tag 5.3 thomastoumasu/k8s-log-output:5.3b && docker push thomastoumasu/k8s-log-output:5.3b
  && cd ../../../
 
 cd the_project/frontend

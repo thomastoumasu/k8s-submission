@@ -22,8 +22,12 @@ spec:
                 path: 'information.txt'
       containers:
         - name: log-output
-          image: thomastoumasu/k8s-log-output:2.5
+          image: thomastoumasu/k8s-log-output:5.3b
           env:
+            - name: GREETER_URL
+              value: 'http://greeter-svc:3456/'
+            - name: PINGPONG_URL
+              value: 'http://pingpong-svc:1234/counter'
             - name: MESSAGE
               valueFrom:
                 configMapKeyRef:
