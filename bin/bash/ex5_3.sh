@@ -24,15 +24,12 @@ kubectl apply -f manifests/routes.yaml
 # create deployment and service for the three apps (log_output, pingpong and greeter)
 kubectl apply -f ./log_output/manifests/config-map.yaml
 kubectl apply -f ./log_output/manifests/deployment.yaml
-# 2345->3000
 kubectl apply -f ./log_output/manifests/service.yaml
 kubectl apply -f ./pingpong/postgres/manifests/config-map.yaml
 kubectl apply -f ./pingpong/postgres/manifests/statefulset.yaml
 kubectl apply -f ./pingpong/manifests/deployment.yaml
-# 1234->3002
 kubectl apply -f ./pingpong/manifests/service.yaml
 kubectl apply -f ./greeter/manifests/deployment.yaml
-# 3456->3004
 kubectl apply -f ./greeter/manifests/service.yaml
 
 # sanity checks
@@ -42,6 +39,9 @@ kubectl wait --for=condition=Ready $POD
 POD=$(kubectl get pods -o=name | grep pingpong)
 # expect "Connection to postgres has been established successfully." If not, wait a bit and retry.
 kubectl logs $POD
+kubectl apply -f ./manifests/busybox.yaml
+kubectl exec -it my-busybox -- nslookup postgres-svc
+
 
 # if gateway
 kubectl annotate gateway log-output-gateway networking.istio.io/service-type=ClusterIP --namespace=exercises
@@ -66,6 +66,7 @@ kubectl apply -f greeter/manifests/prometheus.yaml
 kubectl apply -f greeter/manifests/kiali.yaml
 kubectl apply -f greeter/manifests/grafana.yaml
 POD=$(kubectl get pods -n istio-system -o=name | grep kiali)
+# if time out, do again (takes a while)
 kubectl wait --for=condition=Ready $POD -n istio-system
 istioctl dashboard kiali
 # send some traffic, watch in kali (do not forget to set the namespace above the display)
@@ -80,7 +81,7 @@ istioctl waypoint apply --enroll-namespace --wait
 kubectl describe httproute greeters-route
 # wait a bit and send some traffic (should see version 2 and 1 in proportion to the weights defined in deployment_twoversions.yaml)
 for i in $(seq 1 100); do curl -sS http://localhost:8080 | grep greetings; done
-# watch in kali (if not everything displayed, wait a bit a resend traffic)
+# watch in kali (if not everything displayed, wait a bit and resend traffic)
 
 kubectl get gateway
 # NAME                 CLASS            ADDRESS                                                PROGRAMMED   AGE

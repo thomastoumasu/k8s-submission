@@ -21,3 +21,12 @@ spec:
               value: '3002'
             - name: DATABASE_URL
               value: 'postgres://postgres:mysecretpassword@postgres-svc:5432/postgres'
+      initContainers:
+        - name: init-postgres
+          image: busybox:1.28
+          command:
+            [
+              'sh',
+              '-c',
+              'until nslookup postgres-svc.exercises.svc.cluster.local; do echo waiting for postgres db to startup; sleep 2; done',
+            ]
