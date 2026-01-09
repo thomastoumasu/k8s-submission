@@ -1,0 +1,19 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: greeter
+spec:
+  template:
+    spec:
+      containers:
+        - name: greeter
+          image: thomastoumasu/k8s-greeter:5.3
+          env:
+            - name: VERSION
+              value: '2'
+  traffic:
+    - latestRevision: true
+      percent: 50
+    - latestRevision: false
+      percent: 50
+      revisionName: greeter-00001
