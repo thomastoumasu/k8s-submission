@@ -45,7 +45,7 @@ The numbers link to releases as well as refer to the corresponding scripts in bi
 - [4.7](https://github.com/thomastoumasu/k8s-submission/tree/4.7) Template: Pull configuration with ArgoCD (GitOps)
 - [4.8](https://github.com/thomastoumasu/k8s-submission/tree/4.8)
 - [4.9](https://github.com/thomastoumasu/k8s-submission/tree/4.9) Template: Github Action Pull configuration linked with ArgoCD deployment (GitOps)
-- [4.10](https://github.com/thomastoumasu/k8s-submission/tree/4.10) Template: Use different repositories for the code (k8s-application) and configurations (this repo) (GitOps)
+- [4.10](https://github.com/thomastoumasu/k8s-submission/tree/4.10) Template: Use different repositories for the code ([4.10](https://github.com/thomastoumasu/k8s-application/tree/4.10)) and configurations (this repo) (GitOps)
 - [5.1](https://github.com/thomastoumasu/k8s-submission/tree/5.1) Template: Controller for custom resource (Kubernetes API)
 - [5.2](https://github.com/thomastoumasu/k8s-submission/tree/5.2)
 - [5.3](https://github.com/thomastoumasu/k8s-submission/tree/5.3) Template: Use istio to implement a service mesh (split traffic between versions, traffic between services with encryption and authorizations)
