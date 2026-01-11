@@ -7,3 +7,4 @@ docker system prune -f
 docker builder prune -f  
 docker buildx history rm $(docker buildx history ls)
 docker network prune -f  
+docker buildx rm

@@ -1,0 +1,90 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-mongo
+  namespace: project
+spec:
+  # storageClassName: standard-rwo
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo-ss
+  namespace: project
+spec:
+  serviceName: mongo-svc
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      volumes: # You set volumes at the Pod level, then mount them into containers inside that Pod
+        - name: config
+          configMap: # Provide the name of the ConfigMap you want to mount.
+            name: mongo-cfgmp
+            items: # An array of keys from the ConfigMap to create as files
+              - key: 'mongo-init.js'
+                path: 'mongo-init.js'
+        - name: data
+          persistentVolumeClaim:
+            claimName: pvc-mongo
+      containers:
+        - name: mongo
+          image: mongo
+          ports:
+            - name: web
+              containerPort: 27017
+          resources:
+            requests: # kube-scheduler uses this information to decide which node to place the Pod on and reserves at least this amount specifically for that container to use
+              memory: 64Mi # in bytes, i for power of 2
+              cpu: 50m # 1 CPU unit is equivalent to 1 physical CPU core, or 1 virtual core, depending on whether the node is a physical host or a virtual machine running inside a physical machine.
+            limits: # kubelet enforces the limit so that the running container is not allowed to use more of that resource:
+              memory: 512Mi # Above this, the kernel may terminate the container (OOMKilled, Out Of Memory) when it detects memory pressure.
+              cpu: 250m # Around this, the kernel will restrict access to the CPU (CPU throttling).
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: mongo-cfgmp # The ConfigMap this value comes from.
+                  key: MONGO_INITDB_ROOT_USERNAME # The key to fetch.
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: mongo-cfgmp
+                  key: MONGO_INITDB_ROOT_PASSWORD
+            - name: MONGO_INITDB_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: mongo-cfgmp
+                  key: MONGO_INITDB_DATABASE
+          volumeMounts:
+            - name: config
+              mountPath: '/docker-entrypoint-initdb.d/'
+              readOnly: true
+            - name: data
+              mountPath: '/data/db'
+              subPath: 'mongo'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-svc
+  namespace: project
+  # labels:
+  #   app: mongo
+spec:
+  ports:
+    - port: 27017
+      name: web
+  clusterIP: None
+  selector:
+    app: mongo
