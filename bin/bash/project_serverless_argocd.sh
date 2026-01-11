@@ -1,4 +1,4 @@
-# set up knative (serverless) same as ex5.7, cluster needs e2-medium for CPU
+# set up knative (serverless): same as ex5.7, cluster provisioned with e2-medium to avoid lack of CPU
 CLUSTER_NAME=dwk-cluster
 LOCATION=europe-north1-b
 CONTROL_PLANE_LOCATION=europe-north1-b
@@ -11,6 +11,7 @@ gcloud container clusters create $CLUSTER_NAME --zone=$LOCATION \
   --cluster-version=1.32 --disk-size=32 --num-nodes=3 --machine-type=e2-medium 
 gcloud container clusters get-credentials $CLUSTER_NAME --location=$CONTROL_PLANE_LOCATION 
 
+# set up knative
 kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.18.2/serving-crds.yaml
 kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.18.2/serving-core.yaml
 kubectl apply -f https://github.com/knative/net-kourier/releases/download/knative-v1.18.0/kourier.yaml
@@ -55,5 +56,8 @@ kubectl port-forward svc/argocd-server -n argocd 8080:443
 # in localhost:8080, log in with admin and this pw: 
 kubectl get -n argocd secrets argocd-initial-admin-secret -o yaml | grep -o 'password: .*' | cut -f2- -d: | base64 --decode
 
+# link ArgoCD to repo
 kubectl apply -n argocd -f ./the_project/kustomize/serverless/application.yaml
+
+gcloud container clusters delete dwk-cluster --zone=europe-north1-b
 
