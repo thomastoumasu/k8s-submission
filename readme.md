@@ -1,56 +1,18 @@
-Submission repo for
-https://courses.mooc.fi/org/uh-cs/courses/devops-with-kubernetes/  
 The numbers link to releases as well as refer to the corresponding scripts in bin/bash.
-
-- [1.1](https://github.com/thomastoumasu/k8s-submission/tree/1.1)
-- [1.2](https://github.com/thomastoumasu/k8s-submission/tree/1.2)
-- [1.3](https://github.com/thomastoumasu/k8s-submission/tree/1.3)
-- [1.4](https://github.com/thomastoumasu/k8s-submission/tree/1.4)
-- [1.5](https://github.com/thomastoumasu/k8s-submission/tree/1.5)
-- [1.6](https://github.com/thomastoumasu/k8s-submission/tree/1.6)
-- [1.7](https://github.com/thomastoumasu/k8s-submission/tree/1.7)
-- [1.8](https://github.com/thomastoumasu/k8s-submission/tree/1.8)
-- [1.9](https://github.com/thomastoumasu/k8s-submission/tree/1.9)
-- [1.10](https://github.com/thomastoumasu/k8s-submission/tree/1.10)
-- [1.11](https://github.com/thomastoumasu/k8s-submission/tree/1.11)
-- [1.12](https://github.com/thomastoumasu/k8s-submission/tree/1.12)
-- [1.13](https://github.com/thomastoumasu/k8s-submission/tree/1.13)
-- [2.1](https://github.com/thomastoumasu/k8s-submission/tree/2.1)
-- [2.2](https://github.com/thomastoumasu/k8s-submission/tree/2.2)
-- [2.3](https://github.com/thomastoumasu/k8s-submission/tree/2.3)
-- [2.4](https://github.com/thomastoumasu/k8s-submission/tree/2.4)
-- [2.5](https://github.com/thomastoumasu/k8s-submission/tree/2.5)
-- [2.6](https://github.com/thomastoumasu/k8s-submission/tree/2.6)
-- [2.7](https://github.com/thomastoumasu/k8s-submission/tree/2.7)
-- [2.8](https://github.com/thomastoumasu/k8s-submission/tree/2.8)
-- [2.9](https://github.com/thomastoumasu/k8s-submission/tree/2.9)
-- [2.10](https://github.com/thomastoumasu/k8s-submission/tree/2.10)
-- [3.1](https://github.com/thomastoumasu/k8s-submission/tree/3.1)
-- [3.2](https://github.com/thomastoumasu/k8s-submission/tree/3.2)
-- [3.3](https://github.com/thomastoumasu/k8s-submission/tree/3.3) Template for GKE gateway deployment
-- [3.3a (3.3 with ingress instead of gateway)](https://github.com/thomastoumasu/k8s-submission/tree/3.3) Template for GKE ingress deployment
-- [3.4](https://github.com/thomastoumasu/k8s-submission/tree/3.4)
-- [3.5](https://github.com/thomastoumasu/k8s-submission/tree/3.5)
-- [3.6](https://github.com/thomastoumasu/k8s-submission/tree/3.6) Template for Github action to deploy on GKE on push
-- [3.7](https://github.com/thomastoumasu/k8s-submission/tree/3.7)
-- [3.8](https://github.com/thomastoumasu/k8s-submission/tree/3.8) Template for multiple deployments on same gateway (main on ns project, $branch on ns $branch)
-- [3.9](https://github.com/thomastoumasu/k8s-submission/tree/3.9)
+- [3.3](https://github.com/thomastoumasu/k8s-submission/tree/3.3) GKE gateway deployment
+- [3.3a (3.3 with ingress instead of gateway)](https://github.com/thomastoumasu/k8s-submission/tree/3.3) GKE ingress deployment
+- [3.6](https://github.com/thomastoumasu/k8s-submission/tree/3.6) Github action to deploy on GKE on push
+- [3.8](https://github.com/thomastoumasu/k8s-submission/tree/3.8) Multiple deployments on same gateway (main on ns project, $branch on ns $branch)
 - [3.10](https://github.com/thomastoumasu/k8s-submission/tree/3.10) Use Workload Identity to run gcloud commands from a pod inside the cluster (db backup)
-- [4.1](https://github.com/thomastoumasu/k8s-submission/tree/4.1)
-- [4.2](https://github.com/thomastoumasu/k8s-submission/tree/4.2) Template: Readiness/Liveness probes and load balancer health checks
-- [4.3](https://github.com/thomastoumasu/k8s-submission/tree/4.3)
-- [4.4](https://github.com/thomastoumasu/k8s-submission/tree/4.4) Template: Canary Release using a Prometheus query as a success condition (Argo Rollouts)
-- [4.5](https://github.com/thomastoumasu/k8s-submission/tree/4.5)
-- [4.6](https://github.com/thomastoumasu/k8s-submission/tree/4.6) Template: NATS as message queue system
-- [4.7](https://github.com/thomastoumasu/k8s-submission/tree/4.7) Template: Pull configuration with ArgoCD (GitOps)
-- [4.8](https://github.com/thomastoumasu/k8s-submission/tree/4.8)
-- [4.9](https://github.com/thomastoumasu/k8s-submission/tree/4.9) Template: Github Action Pull configuration linked with ArgoCD deployment (GitOps)
-- [4.10](https://github.com/thomastoumasu/k8s-submission/tree/4.10) Template: Use different repositories for the code ([4.10](https://github.com/thomastoumasu/k8s-application/tree/4.10)) and configurations (this repo) (GitOps)
-- [5.1](https://github.com/thomastoumasu/k8s-submission/tree/5.1) Template: Controller for custom resource (Kubernetes API)
-- [5.2](https://github.com/thomastoumasu/k8s-submission/tree/5.2)
-- [5.3](https://github.com/thomastoumasu/k8s-submission/tree/5.3) Template: Use istio to implement a service mesh (split traffic between versions, traffic between services with encryption and authorizations)
-- [5.4](https://github.com/thomastoumasu/k8s-submission/tree/5.4) Template: Init container and sidecar container
-- [5.6](https://github.com/thomastoumasu/k8s-submission/tree/5.6)
-- [5.7](https://github.com/thomastoumasu/k8s-submission/tree/5.7) Template: Deployment of three serverless apps (knative)
-- [core](https://github.com/thomastoumasu/k8s-submission/tree/core) Template to manually deploy the core functions of the log_output app on both GKE and k3s
-- [psa](https://github.com/thomastoumasu/k8s-submission/tree/psa) Template to declaratively deploy the_project serverless with ArgoCD
+- [4.2](https://github.com/thomastoumasu/k8s-submission/tree/4.2) Readiness/Liveness probes and load balancer health checks
+- [4.4](https://github.com/thomastoumasu/k8s-submission/tree/4.4) Canary Release using a Prometheus query as a success condition (Argo Rollouts)
+- [4.6](https://github.com/thomastoumasu/k8s-submission/tree/4.6) NATS as message queue system
+- [4.7](https://github.com/thomastoumasu/k8s-submission/tree/4.7) Pull configuration with ArgoCD (GitOps)
+- [4.9](https://github.com/thomastoumasu/k8s-submission/tree/4.9) Github Action Pull configuration linked with ArgoCD deployment (GitOps)
+- [4.10](https://github.com/thomastoumasu/k8s-submission/tree/4.10) Use different repositories for the code ([4.10](https://github.com/thomastoumasu/k8s-application/tree/4.10)) and configurations (this repo) (GitOps)
+- [5.1](https://github.com/thomastoumasu/k8s-submission/tree/5.1) Controller for custom resource (Kubernetes API)
+- [5.3](https://github.com/thomastoumasu/k8s-submission/tree/5.3) Use istio to implement a service mesh (split traffic between versions, traffic between services with encryption and authorizations)
+- [5.4](https://github.com/thomastoumasu/k8s-submission/tree/5.4) Init container and sidecar container
+- [5.7](https://github.com/thomastoumasu/k8s-submission/tree/5.7) Deployment of three serverless apps (knative)
+- [core](https://github.com/thomastoumasu/k8s-submission/tree/core) Manually deploy the core functions of the log_output app on both GKE and k3s
+- [psa](https://github.com/thomastoumasu/k8s-submission/tree/psa) Declaratively deploy the_project serverless with ArgoCD
